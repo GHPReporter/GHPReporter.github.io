@@ -13,6 +13,11 @@
     <link href="./dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link href="./assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!--Extra JS files-->
+    <script src="./assets/js/vendor/jquery.min.js"></script>
+    <script src="./js/helper.js"></script>
+
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="./assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <script src="./assets/js/ie-emulation-modes-warning.js"></script>
@@ -26,40 +31,54 @@
     <!-- Octicons -->
     <link rel="stylesheet" type="text/css" href="./octicons/octicons.css"/>
     <!-- Style -->
-    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <link rel="stylesheet" type="text/css" href="./style.css"/>
 </head>
 <!-- NAVBAR ================================================== -->
 <body>
-        <nav class="navbar navbar-default navbar-static-top" style="background-color: white!important; margin-bottom: 0!important;">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">GHPReporter</a>
-                </div>
-                <div id="navbar" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a href="#carousel"><span class="octicon octicon-home"></span> Home</a></li>
-                        <li><a href="#features"><span class="octicon octicon-list-unordered"></span> Features</a></li>
-                        <li><a href="#details"><span class="octicon octicon-info"></span> Details</a></li>
-                        <li><a href="#references"><span class="octicon octicon-tools"></span> References</a></li>
-                        <li><a href="./report/index.html"><span class="octicon octicon-file-text"></span> Demo Report</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="https://github.com/GHPReporter/Ghpr.Core"><span class="octicon octicon-mark-github"></span> GitHub Repository</a></li>
-                        <li><a href="mailto:42_@mail.ru"><span class="octicon octicon-mail"></span> Contact us</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+<nav class="navbar navbar-default navbar-static-top" style="background-color: white !important; margin-bottom: 0 !important;">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand">GHPReporter</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="#carousel"><span class="octicon octicon-home"></span> Home</a>
+                </li>
+                <li>
+                    <a href="#features"><span class="octicon octicon-list-unordered"></span> Features</a>
+                </li>
+                <li>
+                    <a href="#details"><span class="octicon octicon-info"></span> Report details</a>
+                </li>
+                <li>
+                    <a href="#references"><span class="octicon octicon-tools"></span> Tools</a>
+                </li>
+                <li>
+                    <a href="./report/index.html"><span class="octicon octicon-file-text"></span> Demo Report</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="https://github.com/GHPReporter/Ghpr.Core"><span class="octicon octicon-mark-github"></span> GitHub Repository</a>
+                </li>
+                <li>
+                    <a href="mailto:42_@mail.ru"><span class="octicon octicon-mail"></span> Contact us</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 <!-- Carousel ================================================== -->
 <div id="carousel" class="carousel slide" data-ride="carousel">
     <!-- Indicators -->
@@ -76,13 +95,14 @@
                     <h1>GHPReporter</h1>
                     <p>.NET QA Reporting Tool which gives you awesome real-time test run reports clear to everyone in your team.</p>
                     <p>Start using it now!</p>
-                    <p><a class="btn btn-lg btn-primary" href="https://github.com/GHPReporter/Ghpr.Core/releases" role="button">Download latest release</a>
+                    <p>
+                        <a class="btn btn-lg btn-primary" href="https://github.com/GHPReporter/Ghpr.Core/releases" role="button">Download latest release</a>
                     </p>
                 </div>
             </div>
         </div>
         <div class="item">
-            <img class="second-slide" src="./img/ghpr_2.png" alt="Second slide"  style="-ms-opacity: 0.7; opacity: 0.7;">
+            <img class="second-slide" src="./img/ghpr_2.png" alt="Second slide" style="-ms-opacity: 0.7; opacity: 0.7;">
             <div class="container">
                 <div class="carousel-caption">
                     <h1>Absolutely free</h1>
@@ -94,12 +114,15 @@
             </div>
         </div>
         <div class="item">
-            <img class="third-slide" src="./img/ghpr_3.png" alt="Third slide"  style="-ms-opacity: 0.7; opacity: 0.7;">
+            <img class="third-slide" src="./img/ghpr_3.png" alt="Third slide" style="-ms-opacity: 0.7; opacity: 0.7;">
             <div class="container">
                 <div class="carousel-caption">
                     <h1>Perfect style</h1>
-                    <p>We use <code>GitHub Pages</code> style. This style is simple and familiar to millions, which makes reports easy-to-use for everyone.</p>
-                    <p><a class="btn btn-lg btn-primary" href="#" role="button">Browse Demo report</a></p>
+                    <p>We use <code>GitHub Pages</code> style. This style is simple and familiar to millions, which makes reports easy-to-use for everyone.
+                    </p>
+                    <p>
+                        <a class="btn btn-lg btn-primary" href="#" role="button">Browse Demo report</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -113,103 +136,162 @@
         <span class="sr-only">Next</span>
     </a>
 </div><!-- /.carousel -->
+
+
 <div class="container marketing">
-    <div class="row text-center " id="features">
+
+    <hr id="features">
+    <h1 class="text-center">Features</h1>
+    <hr>
+
+    <div class="row text-center">
         <div class="col-lg-3">
-            <h3><span class="mega-octicon octicon-smiley"></span> Easy to use</h3>
+            <h3>
+                <span class="mega-octicon octicon-smiley"></span> Easy to use
+            </h3>
             <p>Easy to include in any project, easy to read reports.</p>
         </div>
         <div class="col-lg-3">
-            <h3><span class="mega-octicon octicon-mark-github"></span> Open source</h3>
+            <h3>
+                <span class="mega-octicon octicon-mark-github"></span> Open source
+            </h3>
             <p>We use GitHub to develop this tool. You are welcome to contibute.</p>
         </div>
         <div class="col-lg-3">
-            <h3><span class="mega-octicon octicon-clock"></span> Real-time report</h3>
+            <h3>
+                <span class="mega-octicon octicon-clock"></span> Real-time report
+            </h3>
             <p>You don't need to wait for all tests to finish</p>
         </div>
         <div class="col-lg-3">
-            <h3><span class="mega-octicon octicon-file-media"></span> Screenshots</h3>
+            <h3>
+                <span class="mega-octicon octicon-file-media"></span> Screenshots
+            </h3>
             <p>You can take screenshot at any time you want. Useful for UI tests.</p>
         </div>
     </div>
     <div class="row text-center">
         <div class="col-lg-3">
-            <h3><span class="mega-octicon octicon-gear"></span> Scalable</h3>
+            <h3>
+                <span class="mega-octicon octicon-gear"></span> Scalable
+            </h3>
             <p>You can specify different settings to meet requirements of your project.</p>
         </div>
         <div class="col-lg-3">
-            <h3><span class="mega-octicon octicon-dashboard"></span> Very fast</h3>
+            <h3>
+                <span class="mega-octicon octicon-dashboard"></span> Very fast
+            </h3>
             <p>We use JSON.net - the fastest .NET JSON Serializer</p>
         </div>
         <div class="col-lg-3">
-            <h3><span class="mega-octicon octicon-verified"></span> Perfect style</h3>
-            <p>We use GitHub Primer and GitHub to make report as simple as possible</p>
+            <h3>
+                <span class="mega-octicon octicon-verified"></span> Perfect style
+            </h3>
+            <p>We use GitHub Primer and Octicons to make report as simple as possible</p>
         </div>
         <div class="col-lg-3">
-            <h3><span class="mega-octicon octicon-desktop-download"></span> Client-side</h3>
+            <h3>
+                <span class="mega-octicon octicon-desktop-download"></span> Client-side
+            </h3>
             <p>No server required. You can view report in any browser without running server.</p>
         </div>
     </div>
 
-    <hr class="featurette-divider">
+    <hr id="details" class="featurette-divider">
+    <h1 class="text-center">Report details</h1>
+    <hr>
 
-    <div id="details" class="row featurette">
+    <div class="row featurette">
         <div class="col-md-7">
-            <h2 class="featurette-heading">Report main page. <span class="text-muted">It'll blow your mind.</span></h2>
+            <h2>Report main page. <span class="text-muted">It'll blow your mind.</span></h2>
             <p class="lead">Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
         </div>
         <div class="col-md-5">
-            <img class="featurette-image img-responsive center-block" src="./img/report_main.png" alt="Generic placeholder image">
+            <a class="pop thumbnail">
+                <img class="featurette-image img-responsive center-block" src="./img/report_main.png" alt="Report main page">
+            </a>
         </div>
     </div>
     <hr>
     <div class="row featurette">
         <div class="col-md-7 col-md-push-5">
-            <h2 class="featurette-heading">Run page. <span class="text-muted">See for yourself.</span></h2>
+            <h2>Run page. <span class="text-muted">See for yourself.</span></h2>
             <p class="lead">Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
         </div>
         <div class="col-md-5 col-md-pull-7">
-            <img class="featurette-image img-responsive center-block" src="./img/report_run.png" alt="Generic placeholder image">
+            <a class="pop thumbnail">
+                <img class="featurette-image img-responsive center-block" src="./img/report_run.png" alt="Run page">
+            </a>
         </div>
     </div>
     <hr>
     <div class="row featurette">
         <div class="col-md-7">
-            <h2 class="featurette-heading">Test result page. <span class="text-muted">Checkmate.</span></h2>
+            <h2>Test result page. <span class="text-muted">Checkmate.</span></h2>
             <p class="lead">Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
         </div>
         <div class="col-md-5">
-            <img class="featurette-image img-responsive center-block" src="./img/report_test.png" alt="Generic placeholder image">
+            <a class="pop thumbnail">
+                <img class="featurette-image img-responsive center-block" src="./img/report_test.png" alt="Test result page">
+            </a>
+        </div>
+    </div>
+    <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 1070px !important;">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <img src="" class="imagepreview" style="width: 1030px; height: 645px;" alt="">
+                </div>
+            </div>
         </div>
     </div>
 
-    <hr>
+    <hr id="references" class="featurette-divider">
+    <h1 class="text-center">Tools we use</h1>
     <hr>
 
-    <div class="text-center row" id="references">
+    <div class="text-center row">
         <div class="col-lg-3">
-            <a href="https://plot.ly/javascript/"><img class="img-circle center-block" src="img/plotlyjs-logo.png" alt="PlotlyJs Logo" width="140" height="140"></a>
+            <a href="https://plot.ly/javascript/">
+                <img class="img-circle center-block" src="img/plotlyjs-logo.png" alt="PlotlyJs Logo" width="140" height="140">
+            </a>
             <h2>plotly.js</h2>
             <p>The open source javascript graphing library that powers plotly</p>
-            <p><a class="btn btn-default" href="https://github.com/plotly/plotly.js" role="button">View github repo &raquo;</a></p>
+            <p>
+                <a class="btn btn-default" href="https://github.com/plotly/plotly.js" role="button">View github repo &raquo;</a>
+            </p>
         </div>
         <div class="col-lg-3">
-            <a href="http://primercss.io/"><img class="img-circle center-block" src="img/primer-logo.png" alt="Primer Logo" width="140" height="140"></a>
+            <a href="http://primercss.io/">
+                <img class="img-circle center-block" src="img/primer-logo.png" alt="Primer Logo" width="140" height="140">
+            </a>
             <h2>Primer</h2>
             <p>The CSS toolkit and guidelines that power GitHub</p>
-            <p><a class="btn btn-default" href="https://github.com/primer/primer" role="button">View github repo &raquo;</a></p>
+            <p>
+                <a class="btn btn-default" href="https://github.com/primer/primer" role="button">View github repo &raquo;</a>
+            </p>
         </div>
         <div class="col-lg-3">
-            <a href="http://www.newtonsoft.com/json"><img class="img-circle center-block" src="img/jsonnet-logo.png" alt="Newtonsoft.Json Logo" width="140" height="140"></a>
+            <a href="http://www.newtonsoft.com/json">
+                <img class="img-circle center-block" src="img/jsonnet-logo.png" alt="Newtonsoft.Json Logo" width="140" height="140">
+            </a>
             <h2>Newtonsoft.Json</h2>
             <p>Popular high-performance JSON framework for .NET</p>
-            <p><a class="btn btn-default" href="https://github.com/JamesNK/Newtonsoft.Json" role="button">View github repo &raquo;</a></p>
+            <p>
+                <a class="btn btn-default" href="https://github.com/JamesNK/Newtonsoft.Json" role="button">View github repo &raquo;</a>
+            </p>
         </div>
         <div class="col-lg-3">
-            <a href="https://octicons.github.com/"><img class="img-circle center-block" src="img/octicons-logo.png" alt="Octicons Logo" width="140" height="140"></a>
+            <a href="https://octicons.github.com/">
+                <img class="img-circle center-block" src="img/octicons-logo.png" alt="Octicons Logo" width="140" height="140">
+            </a>
             <h2>GitHub Octicons</h2>
             <p>A scalable set of icons handcrafted with &lt;3 by GitHub</p>
-            <p><a class="btn btn-default" href="https://github.com/primer/octicons" role="button">View github repo &raquo;</a></p>
+            <p>
+                <a class="btn btn-default" href="https://github.com/primer/octicons" role="button">View github repo &raquo;</a>
+            </p>
         </div>
     </div><!-- /.row -->
 
@@ -220,9 +302,10 @@
         <p class="pull-right">
             <a href="#">Back to top</a>
         </p>
-        <p>&copy; 2015 GHPReporter 
-        &middot; <a href="https://github.com/GHPReporter/Ghpr.Core/blob/master/LICENSE">License</a> 
-        &middot; <a href="https://github.com/GHPReporter">GitHub</a>
+        <p>
+            &copy; 2015 GHPReporter
+            &middot; <a href="https://github.com/GHPReporter/Ghpr.Core/blob/master/LICENSE">License</a>
+            &middot; <a href="https://github.com/GHPReporter">GitHub</a>
         </p>
     </footer>
 
