@@ -13,4 +13,4 @@
 
 # GHPReporter Website
 
-Visit this site to get some information about GHPReporter
+This is the official site of GHPReporter
