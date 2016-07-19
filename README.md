@@ -13,4 +13,4 @@
 
 # GHPReporter Website
 
-This is the official site of GHPReporter
+This is the official site of GHPReporter. [Visit site](https://GHPReporter.github.io)
