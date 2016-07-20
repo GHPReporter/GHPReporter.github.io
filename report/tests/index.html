@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="./../src/octicons/octicons.css" />
     <link rel="stylesheet" type="text/css" href="./../src/style/primer.css" />
     <link rel="stylesheet" type="text/css" href="./../src/style/github.css" />
+    <link rel="icon" href="./../src/favicon.ico">
 </head>
 <body onload="TestPageUpdater.initializePage();">
     <div class="container">
@@ -46,11 +47,15 @@
                 </a>
                 <a id="tab-test-output" onclick="TestPageUpdater.showTab('test-output', this);" class="tabnav-tab">
                     <span class="octicon octicon-file-text"></span>
-                    Test output
+                    Output
                 </a>
                 <a id="tab-test-failure" onclick="TestPageUpdater.showTab('test-failure', this);" class="tabnav-tab">
                     <span class="octicon octicon-stop"></span>
-                    Test failure
+                    Failure
+                </a>
+                <a id="tab-test-screenshots" onclick="TestPageUpdater.showTab('test-screenshots', this);" class="tabnav-tab">
+                    <span class="octicon octicon-device-desktop"></span>
+                    Screenshots
                 </a>
             </nav>
         </div>
@@ -65,9 +70,12 @@
                             <li id="name">Test name: </li>
                             <li id="full-name">Test full name: </li>
                             <li id="result">Test result: </li>
+                            <li id="priority">Priority: </li>
+                            <li id="test-type">Test type: </li>
                             <li id="start">Start datetime: </li>
                             <li id="finish">Finish datetime: </li>
                             <li id="duration">Duration: </li>
+                            <li id="categories">Test categories: </li>
                             <li style="white-space: pre-wrap" id="message">Message: </li>
                         </ul>
                     </div>
@@ -97,6 +105,15 @@
                 <ul>
                     <li id="test-message" style="white-space: pre-wrap"></li>
                     <li id="test-stack-trace" style="white-space: pre-wrap"></li>
+                </ul>
+            </div>
+        </div>
+        <div class="columns border" id="test-screenshots" style="margin-top: -16px; display: none">
+            <div class="column">
+                <h2 class="border-bottom p-3 mb-3">
+                    Test screenshots:
+                </h2>
+                <ul id="screenshots">
                 </ul>
             </div>
         </div>
