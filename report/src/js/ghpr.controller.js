@@ -64,6 +64,22 @@ class UrlHelper {
             }
         }
     }
+    static removeParam(key) {
+        const paramsPart = document.location.search.substr(1);
+        window.history.pushState("", "", "");
+        if (paramsPart === "") {
+            return;
+        }
+        else {
+            let params = paramsPart.split("&");
+            const paramToRemove = params.find((par) => par.split("=")[0] === key);
+            if (paramToRemove != undefined) {
+                const index = params.indexOf(paramToRemove);
+                params.splice(index, 1);
+            }
+            window.history.pushState("", "", `?${params.join("&")}`);
+        }
+    }
 }
 class PathsHelper {
     static getRunPath(pt, guid) {
@@ -422,7 +438,7 @@ class RunPageUpdater {
     static addTest(t, c, i) {
         const ti = t.testInfo;
         const testHref = `./../tests/index.html?testGuid=${ti.guid}&testFile=${ti.fileName}`;
-        const testLi = `<li id=test-${ti.guid} style="list-style-type: none;" class="${TestRunHelper.getResult(t)}">
+        const testLi = `<li id="test-${ti.guid}" style="list-style-type: none;" class="${TestRunHelper.getResult(t)}">
             <span class="octicon octicon-primitive-square" style="color: ${TestRunHelper.getColor(t)};"></span>
             <a href="${testHref}"> ${t.name}</a></li>`;
         const arr = t.fullName.split(".");
@@ -439,12 +455,12 @@ class RunPageUpdater {
         }
         const ids = new Array();
         for (let j = 0; j < len2; j++) {
-            ids[j] = `id-${arr.slice(0, j + 1).join(".")}`;
+            ids[j] = `id-${arr.slice(0, j + 1).join(".").replace(/\s/g, "_")}`;
         }
         for (let j = 0; j <= len2; j++) {
             const el = document.getElementById(ids[j]);
             if (el === null || el === undefined) {
-                const li = `<li id=${ids[j]} class="test-suite"><a>${arr[j]}</a><ul></ul></li>`;
+                const li = `<li id="${ids[j]}" class="test-suite"><a>${arr[j]}</a><ul></ul></li>`;
                 if (j === 0) {
                     document.getElementById("all-tests").innerHTML += li;
                 }
@@ -618,7 +634,15 @@ class RunPageUpdater {
         this.loadRun(undefined);
     }
     static initializePage() {
-        this.tryLoadRunByGuid();
+        const isLatest = UrlHelper.getParam("loadLatest");
+        if (isLatest !== "true") {
+            UrlHelper.removeParam("loadLatest");
+            this.tryLoadRunByGuid();
+        }
+        else {
+            UrlHelper.removeParam("loadLatest");
+            this.loadLatest();
+        }
         const tabFromUrl = UrlHelper.getParam("currentTab");
         const tab = tabFromUrl === "" ? "run-main-stats" : tabFromUrl;
         this.showTab(tab, document.getElementById(`tab-${tab}`));
@@ -874,11 +898,15 @@ class TestPageUpdater {
             if (index === undefined || index.toString() === "NaN") {
                 index = this.testVersionsCount - 1;
             }
-            if (index === 0) {
+            if (index <= 0) {
                 this.disableBtn("btn-prev");
             }
-            if (index === testInfos.length - 1) {
+            else {
+                this.enableBtn("btn-prev");
+            }
+            if (index >= testInfos.length - 1) {
                 this.disableBtn("btn-next");
+                index = testInfos.length - 1;
             }
             this.currentTest = index;
             this.updateTestPage(testInfos[index].guid, testInfos[index].fileName);
@@ -895,12 +923,13 @@ class TestPageUpdater {
             const testInfo = testInfos.find((t) => t.fileName === fileName);
             if (testInfo != undefined) {
                 this.enableBtns();
-                const index = testInfos.indexOf(testInfo);
-                if (index === 0) {
+                let index = testInfos.indexOf(testInfo);
+                if (index <= 0) {
                     this.disableBtn("btn-prev");
                 }
-                if (index === testInfos.length - 1) {
+                if (index >= testInfos.length - 1) {
                     this.disableBtn("btn-next");
+                    index = testInfos.length - 1;
                 }
                 this.loadTest(index);
             }
@@ -915,6 +944,9 @@ class TestPageUpdater {
     }
     static disableBtn(id) {
         document.getElementById(id).setAttribute("disabled", "true");
+    }
+    static enableBtn(id) {
+        document.getElementById(id).removeAttribute("disabled");
     }
     static loadPrev() {
         if (this.currentTest === 0) {
@@ -949,7 +981,15 @@ class TestPageUpdater {
         this.loadTest(undefined);
     }
     static initializePage() {
-        this.tryLoadTestByGuid();
+        const isLatest = UrlHelper.getParam("loadLatest");
+        if (isLatest !== "true") {
+            UrlHelper.removeParam("loadLatest");
+            this.tryLoadTestByGuid();
+        }
+        else {
+            UrlHelper.removeParam("loadLatest");
+            this.loadLatest();
+        }
         const tabFromUrl = UrlHelper.getParam("currentTab");
         const tab = tabFromUrl === "" ? "test-history" : tabFromUrl;
         this.showTab(tab === "" ? "test-history" : tab, document.getElementById(`tab-${tab}`));
