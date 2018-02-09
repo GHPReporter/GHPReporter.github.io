@@ -3,8 +3,6 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" charset="utf-8" />
     <title>GHP Report Test Page</title>
-    <script src="./../src/js/tablesort.min.js"></script>
-    <script src="./../src/js/jquery-1.11.0.min.js"></script>
     <script src="./../src/js/ghpr.controller.js"></script>
     <script src="./../src/js/plotly.min.js"></script>
     <style type="text/css"></style>
@@ -57,10 +55,14 @@
                     <span class="octicon octicon-device-desktop"></span>
                     Screenshots
                 </a>
+                <a id="tab-test-data" onclick="TestPageUpdater.showTab('test-data', this);" class="tabnav-tab">
+                    <span class="octicon octicon-checklist"></span>
+                    Test Data
+                </a>
             </nav>
         </div>
         <div class="columns border" id="test-history" style="margin-top: -16px">
-            <div class="one-third column">
+            <div class="column" style="width: 100%;">
                 <div>
                     <h2 class="border-bottom p-3 mb-3">
                         Main information:
@@ -69,7 +71,19 @@
                         <ul style="word-wrap: break-word;">
                             <li id="name">Test name: </li>
                             <li id="full-name">Test full name: </li>
+                            <li id="description">Test description: </li>
                             <li id="result">Test result: </li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="test-history-chart">
+                </div>
+                <div>
+                    <h2 class="border-bottom p-3 mb-3">
+                        More details:
+                    </h2>
+                    <div class="border border-0 p-3 mb-3">
+                        <ul style="word-wrap: break-word;">
                             <li id="priority">Priority: </li>
                             <li id="test-type">Test type: </li>
                             <li id="start">Start datetime: </li>
@@ -81,49 +95,42 @@
                     </div>
                 </div>
             </div>
-            <div class="two-thirds column">
-                <div id="test-history-chart">
-
-                </div>
-            </div>
         </div>
-        <div class="columns border" id="test-output" style="margin-top: -16px; display: none">
-            <div class="column">
-                <h2 class="border-bottom p-3 mb-3">
-                    Test output:
-                </h2>
-                <ul>
-                    <li id="test-output-string" style="white-space: pre-wrap;"></li>
-                </ul>
-            </div>
-        </div>
+	    <div class="columns border" id="test-output" style="margin-top: -16px; display: none">
+		    <h2 class="border-bottom p-3 mb-3">
+			    Test output:
+		    </h2>
+			<ul id="test-output-string"></ul>
+	    </div>
         <div class="columns border" id="test-failure" style="margin-top: -16px; display: none">
-            <div class="column">
-                <h2 class="border-bottom p-3 mb-3">
-                    Test failure:
-                </h2>
-                <ul>
-                    <li id="test-message" style="white-space: pre-wrap"></li>
-                    <li id="test-stack-trace" style="white-space: pre-wrap"></li>
-                </ul>
-            </div>
+            <h2 class="border-bottom p-3 mb-3">
+                Test failure:
+            </h2>
+            <ul style="word-wrap: break-word;">
+                <li id="test-message" style="white-space: pre-wrap"></li>
+                <li id="test-stack-trace" style="white-space: pre-wrap"></li>
+            </ul>
         </div>
         <div class="columns border" id="test-screenshots" style="margin-top: -16px; display: none">
             <div class="column">
                 <h2 class="border-bottom p-3 mb-3">
                     Test screenshots:
                 </h2>
-                <ul id="screenshots">
-                </ul>
+                <ul id="screenshots"></ul>
             </div>
+        </div>
+        <div class="columns border" id="test-data" style="margin-top: -16px; display: none">
+            <h2 class="border-bottom p-3 mb-3">
+                Test data:
+            </h2>
+            <ul id="test-data-list"></ul>
         </div>
     </div>
 </body>
 </html>
 <footer>
     <div class="border border-0 p-3 mb-3" style="text-align: center;">
-        <div style="position: relative;">
-            Copyright 2015-2016 © GhpReporter
+        <div id="copyright" style="position: relative;">
         </div>
     </div>
 </footer>
