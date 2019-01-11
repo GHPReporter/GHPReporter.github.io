@@ -6,6 +6,93 @@ Color.failed = "#ef5350";
 Color.ignored = "#81d4fa";
 Color.inconclusive = "#D6FAF7";
 Color.unknown = "#bdbdbd";
+class DateFormatter {
+    static format(date) {
+        if (date < new Date(2000, 1)) {
+            return "-";
+        }
+        const year = `${date.getFullYear()}`;
+        const month = this.correctString(`${date.getMonth() + 1}`);
+        const day = this.correctString(`${date.getDate()}`);
+        const hour = this.correctString(`${date.getHours()}`);
+        const minute = this.correctString(`${date.getMinutes()}`);
+        const second = this.correctString(`${date.getSeconds()}`);
+        return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+    }
+    static formatWithMs(date) {
+        if (date < new Date(2000, 1)) {
+            return "-";
+        }
+        const ms = this.correctMs(date.getMilliseconds());
+        return this.format(date) + "." + ms;
+    }
+    static diff(start, finish) {
+        const timeDifference = (finish.getTime() - start.getTime());
+        const dDate = new Date(timeDifference);
+        const dHours = dDate.getUTCHours();
+        const dMins = dDate.getUTCMinutes();
+        const dSecs = dDate.getUTCSeconds();
+        const dMilliSecs = dDate.getUTCMilliseconds();
+        const readableDifference = this.correctNumber(dHours) + ":" + this.correctNumber(dMins) + ":"
+            + this.correctNumber(dSecs) + "." + this.correctNumber(dMilliSecs);
+        return readableDifference;
+    }
+    static correctString(s) {
+        if (s.length === 1) {
+            return `0${s}`;
+        }
+        else
+            return s;
+    }
+    static correctNumber(n) {
+        if (n >= 0 && n < 10) {
+            return `0${n}`;
+        }
+        else
+            return `${n}`;
+    }
+    static correctMs(n) {
+        if (n >= 0 && n < 10) {
+            return `00${n}`;
+        }
+        else if (n >= 10 && n < 100) {
+            return `0${n}`;
+        }
+        else
+            return `${n}`;
+    }
+    static correctYear(n) {
+        if (n >= 0 && n < 10) {
+            return `000${n}`;
+        }
+        else if (n >= 10 && n < 100) {
+            return `00${n}`;
+        }
+        else if (n >= 100 && n < 1000) {
+            return `0${n}`;
+        }
+        else
+            return `${n}`;
+    }
+}
+class ReportSettingsDto {
+}
+class RunSummaryDto {
+}
+class ItemInfoDto {
+}
+class SimpleItemInfoDto {
+}
+class TestDataDto {
+}
+class RunDto {
+}
+class TestEventDto {
+}
+class TestScreenshotDto {
+}
+class TestOutputDto {
+}
 var TestResult;
 (function (TestResult) {
     TestResult[TestResult["Passed"] = 0] = "Passed";
@@ -15,12 +102,453 @@ var TestResult;
     TestResult[TestResult["Inconclusive"] = 4] = "Inconclusive";
     TestResult[TestResult["Unknown"] = 5] = "Unknown";
 })(TestResult || (TestResult = {}));
+class TestRunDto {
+}
+class ReportSettings {
+}
+class RunSummary {
+}
+class ItemInfo {
+}
+class SimpleItemInfo {
+}
+class TestData {
+}
+class Run {
+}
+class TestEvent {
+}
+class TestOutput {
+}
+class TestScreenshot {
+}
+class TestRun {
+}
+class SimpleItemInfoDtoMapper {
+    static map(simpleItemInfo) {
+        let simpleItemIntoDto = new SimpleItemInfoDto();
+        simpleItemIntoDto.date = simpleItemInfo.date;
+        simpleItemIntoDto.itemName = simpleItemInfo.itemName;
+        return simpleItemIntoDto;
+    }
+}
+class ItemInfoDtoMapper {
+    static map(itemInfo) {
+        let itemIntoDto = new ItemInfoDto();
+        itemIntoDto.guid = itemInfo.guid;
+        itemIntoDto.start = itemInfo.start;
+        itemIntoDto.finish = itemInfo.finish;
+        itemIntoDto.itemName = itemInfo.itemName;
+        return itemIntoDto;
+    }
+}
+class TestOutputDtoMapper {
+    static map(testOutput) {
+        let testOutputDto = new TestOutputDto();
+        testOutputDto.output = testOutput.output;
+        testOutputDto.suiteOutput = testOutput.suiteOutput;
+        testOutputDto.testOutputInfo = SimpleItemInfoDtoMapper.map(testOutput.testOutputInfo);
+        return testOutputDto;
+    }
+}
+class TestRunDtoMapper {
+    static map(testRun) {
+        let eventDtos = new Array(testRun.events.length);
+        let screenshotDtos = new Array(testRun.screenshots.length);
+        let testDataDtos = new Array(testRun.testData.length);
+        for (let i = 0; i < testRun.events.length; i++) {
+            let event = testRun.events[i];
+            let eventDto = new TestEventDto();
+            eventDto.name = event.name;
+            eventDto.started = event.started;
+            eventDto.finished = event.finished;
+            eventDto.eventInfo = SimpleItemInfoDtoMapper.map(event.eventInfo);
+            eventDtos[i] = eventDto;
+        }
+        for (let i = 0; i < testRun.screenshots.length; i++) {
+            screenshotDtos[i] = SimpleItemInfoDtoMapper.map(testRun.screenshots[i]);
+        }
+        for (let i = 0; i < testRun.testData.length; i++) {
+            let testData = testRun.testData[i];
+            let testDataDto = new TestDataDto();
+            testDataDto.actual = testData.actual;
+            testDataDto.expected = testData.expected;
+            testDataDto.comment = testData.comment;
+            testDataDto.testDataInfo = SimpleItemInfoDtoMapper.map(testData.testDataInfo);
+            testDataDtos[i] = testDataDto;
+        }
+        let testRunDto = new TestRunDto();
+        testRunDto.name = testRun.name;
+        testRunDto.categories = testRun.categories;
+        testRunDto.description = testRun.description;
+        testRunDto.duration = testRun.duration;
+        testRunDto.events = eventDtos;
+        testRunDto.fullName = testRun.fullName;
+        testRunDto.output = SimpleItemInfoDtoMapper.map(testRun.output);
+        testRunDto.priority = testRun.priority;
+        testRunDto.result = testRun.result;
+        testRunDto.testInfo = ItemInfoDtoMapper.map(testRun.testInfo);
+        testRunDto.testMessage = testRun.testMessage;
+        testRunDto.testStackTrace = testRun.testStackTrace;
+        testRunDto.runGuid = testRun.runGuid;
+        testRunDto.testType = testRun.testType;
+        testRunDto.screenshots = screenshotDtos;
+        testRunDto.testData = testDataDtos;
+        return testRunDto;
+    }
+}
+class TestScreenshotDtoMapper {
+    static map(testScreenshot) {
+        let testScreenshotDto = new TestScreenshotDto();
+        testScreenshotDto.base64Data = testScreenshot.base64Data;
+        testScreenshotDto.format = testScreenshot.format;
+        testScreenshotDto.testScreenshotInfo = SimpleItemInfoDtoMapper.map(testScreenshot.testScreenshotInfo);
+        return testScreenshotDto;
+    }
+}
+class RunDtoMapper {
+    static map(run) {
+        let runSummaryDto = new RunSummaryDto();
+        runSummaryDto.errors = run.summary.errors;
+        runSummaryDto.failures = run.summary.failures;
+        runSummaryDto.ignored = run.summary.ignored;
+        runSummaryDto.inconclusive = run.summary.inconclusive;
+        runSummaryDto.success = run.summary.success;
+        runSummaryDto.unknown = run.summary.unknown;
+        runSummaryDto.total = run.summary.total;
+        let testRuns = run.testRuns;
+        let len = testRuns.length;
+        let testInfoDtos = new Array(len);
+        for (let i = 0; i < len; i++) {
+            testInfoDtos[i] = ItemInfoDtoMapper.map(testRuns[i]);
+        }
+        let runDto = new RunDto();
+        runDto.name = run.name;
+        runDto.runInfo = ItemInfoDtoMapper.map(run.runInfo);
+        runDto.sprint = run.sprint;
+        runDto.summary = runSummaryDto;
+        runDto.testsInfo = testInfoDtos;
+        return runDto;
+    }
+}
 var PageType;
 (function (PageType) {
     PageType[PageType["TestRunsPage"] = 0] = "TestRunsPage";
     PageType[PageType["TestRunPage"] = 1] = "TestRunPage";
     PageType[PageType["TestPage"] = 2] = "TestPage";
 })(PageType || (PageType = {}));
+class UrlHelper {
+    static insertParam(key, value) {
+        const paramsPart = document.location.search.substr(1);
+        window.history.pushState("", "", "");
+        const p = `${key}=${value}`;
+        if (paramsPart === "") {
+            window.history.pushState("", "", `?${p}`);
+        }
+        else {
+            let params = paramsPart.split("&");
+            const paramToChange = params.find((par) => par.split("=")[0] === key);
+            if (paramToChange != undefined) {
+                if (params.length === 1) {
+                    params = [p];
+                }
+                else {
+                    const index = params.indexOf(paramToChange);
+                    params.splice(index, 1);
+                    params.push(p);
+                }
+            }
+            else {
+                params.push(p);
+            }
+            window.history.pushState("", "", `?${params.join("&")}`);
+        }
+    }
+    static getParam(key) {
+        const paramsPart = document.location.search.substr(1);
+        if (paramsPart === "") {
+            return "";
+        }
+        else {
+            const params = paramsPart.split("&");
+            const paramToGet = params.find((par) => par.split("=")[0] === key);
+            if (paramToGet != undefined) {
+                return paramToGet.split("=")[1];
+            }
+            else {
+                return "";
+            }
+        }
+    }
+    static removeParam(key) {
+        const paramsPart = document.location.search.substr(1);
+        window.history.pushState("", "", "");
+        if (paramsPart === "") {
+            return;
+        }
+        else {
+            let params = paramsPart.split("&");
+            const paramToRemove = params.find((par) => par.split("=")[0] === key);
+            if (paramToRemove != undefined) {
+                const index = params.indexOf(paramToRemove);
+                params.splice(index, 1);
+            }
+            window.history.pushState("", "", `?${params.join("&")}`);
+        }
+    }
+}
+class TabsHelper {
+    static showTab(idToShow, caller, pageTabsIds) {
+        if (pageTabsIds.indexOf(idToShow) <= -1) {
+            return;
+        }
+        UrlHelper.insertParam("currentTab", idToShow);
+        const tabs = document.getElementsByClassName("ghpr-tab-a");
+        for (let i = 0; i < tabs.length; i++) {
+            tabs[i].classList.remove("selected");
+        }
+        caller.className += " selected";
+        pageTabsIds.forEach((id) => {
+            document.getElementById(id).style.display = "none";
+        });
+        document.getElementById(idToShow).style.display = "";
+    }
+}
+class ProgressBar {
+    constructor(total) {
+        this.barId = "progress-bar";
+        this.barDivId = "progress-bar-div";
+        this.barTextId = "progress-bar-line";
+        this.reset(total);
+    }
+    reset(total) {
+        this.total = total;
+        this.current = 0;
+    }
+    show() {
+        document.getElementById(this.barId).style.display = "";
+        document.getElementById(this.barId).innerHTML = `<div id="${this.barDivId}"><div id="${this.barTextId}"></div></div>`;
+        document.getElementById(this.barId).style.position = "relative";
+        document.getElementById(this.barId).style.width = "100%";
+        document.getElementById(this.barId).style.height = "20px";
+        document.getElementById(this.barId).style.backgroundColor = Color.unknown;
+        document.getElementById(this.barDivId).style.position = "absolute";
+        document.getElementById(this.barDivId).style.width = "10%";
+        document.getElementById(this.barDivId).style.height = "100%";
+        document.getElementById(this.barDivId).style.backgroundColor = Color.passed;
+        document.getElementById(this.barTextId).style.textAlign = "center";
+        document.getElementById(this.barTextId).style.lineHeight = "20px";
+        document.getElementById(this.barTextId).style.color = "white";
+    }
+    onLoaded(count) {
+        this.current += count;
+        const percentage = 100 * this.current / this.total;
+        const pString = percentage.toString().split(".")[0] + "%";
+        document.getElementById(this.barDivId).style.width = pString;
+        document.getElementById(this.barTextId).innerHTML = pString;
+    }
+    hide() {
+        document.getElementById(this.barId).innerHTML = "";
+        document.getElementById(this.barId).style.display = "none";
+    }
+}
+class JsonParser {
+    static reviveRun(key, value) {
+        if (key === "start" || key === "finish" || key === "date")
+            return new Date(value);
+        return value;
+    }
+}
+class LocalFileSystemDataService {
+    constructor() {
+        this.reviveRun = JsonParser.reviveRun;
+        this.progressBar = new ProgressBar(1);
+    }
+    fromPage(pageType) {
+        this.currentPage = pageType;
+        return this;
+    }
+    getRun(runGuid, callback) {
+        const path = LocalFileSystemPathsHelper.getRunPath(this.currentPage, runGuid);
+        this.loadJsonsByPaths([path], 0, new Array(), false, true, (response) => {
+            const run = JSON.parse(response, this.reviveRun);
+            const runDto = RunDtoMapper.map(run);
+            if (runDto.name === "") {
+                runDto.name = `${DateFormatter.format(runDto.runInfo.start)} - ${DateFormatter.format(runDto.runInfo.finish)}`;
+            }
+            callback(runDto);
+        });
+    }
+    getRunInfos(callback) {
+        const path = LocalFileSystemPathsHelper.getRunsPath(this.currentPage);
+        this.loadJsonsByPaths([path], 0, new Array(), false, true, (response) => {
+            const runInfos = JSON.parse(response, this.reviveRun);
+            const len = runInfos.length;
+            let runInfoDtos = new Array(len);
+            for (let i = 0; i < len; i++) {
+                runInfoDtos[i] = ItemInfoDtoMapper.map(runInfos[i]);
+            }
+            runInfoDtos.sort(Sorter.itemInfoByFinishDateDesc);
+            callback(runInfoDtos);
+        });
+    }
+    getTestInfos(testGuid, callback) {
+        const path = LocalFileSystemPathsHelper.getTestsPath(testGuid, this.currentPage);
+        this.loadJsonsByPaths([path], 0, new Array(), false, true, (response) => {
+            const testInfos = JSON.parse(response, this.reviveRun);
+            const len = testInfos.length;
+            let testInfoDtos = new Array(len);
+            for (let i = 0; i < len; i++) {
+                testInfoDtos[i] = ItemInfoDtoMapper.map(testInfos[i]);
+            }
+            testInfoDtos.sort(Sorter.itemInfoByFinishDateDesc);
+            callback(testInfoDtos);
+        });
+    }
+    getLatestRuns(callback) {
+        const path = LocalFileSystemPathsHelper.getRunsPath(this.currentPage);
+        this.loadJsonsByPaths([path], 0, new Array(), false, true, (response) => {
+            let runInfos = JSON.parse(response, this.reviveRun);
+            runInfos = runInfos.sort(Sorter.itemInfoByFinishDateDesc);
+            let totalCount = runInfos.length;
+            const runsToLoad = this.reportSettings.runsToDisplay >= 1 ? Math.min(this.reportSettings.runsToDisplay, runInfos.length) : runInfos.length;
+            let runInfosDto = new Array(runsToLoad);
+            for (let i = 0; i < runsToLoad; i++) {
+                runInfosDto[i] = ItemInfoDtoMapper.map(runInfos[i]);
+            }
+            const paths = new Array();
+            for (let i = 0; i < runsToLoad; i++) {
+                paths[i] = `runs/run_${runInfosDto[i].guid}.json`;
+            }
+            const runs = new Array();
+            this.loadJsonsByPaths(paths, 0, new Array(), false, false, (responses) => {
+                for (let i = 0; i < responses.length; i++) {
+                    const loadedRun = JSON.parse(responses[i], this.reviveRun);
+                    if (loadedRun.name === "") {
+                        loadedRun.name = `${DateFormatter.format(loadedRun.runInfo.start)} - ${DateFormatter.format(loadedRun.runInfo.finish)}`;
+                    }
+                    runs[i] = RunDtoMapper.map(loadedRun);
+                }
+                callback(runs, totalCount);
+            });
+        });
+    }
+    getLatestTests(testGuid, callback) {
+        const path = LocalFileSystemPathsHelper.getTestsPath(testGuid, this.currentPage);
+        this.loadJsonsByPaths([path], 0, new Array(), false, true, (response) => {
+            let testInfos = JSON.parse(response, this.reviveRun);
+            testInfos = testInfos.sort(Sorter.itemInfoByFinishDateDesc);
+            let totalCount = testInfos.length;
+            const testsToLoad = this.reportSettings.testsToDisplay >= 1 ? Math.min(this.reportSettings.testsToDisplay, testInfos.length) : testInfos.length;
+            let testInfosDto = new Array(testsToLoad);
+            for (let i = 0; i < testsToLoad; i++) {
+                testInfosDto[i] = ItemInfoDtoMapper.map(testInfos[i]);
+            }
+            const paths = new Array();
+            for (let i = 0; i < testsToLoad; i++) {
+                paths[i] = LocalFileSystemPathsHelper.getTestItemPath(testInfosDto[i].itemName, testInfosDto[i].guid, this.currentPage);
+            }
+            const testRuns = new Array();
+            this.loadJsonsByPaths(paths, 0, new Array(), false, false, (responses) => {
+                for (let i = 0; i < responses.length; i++) {
+                    const loadedTestRun = JSON.parse(responses[i], this.reviveRun);
+                    testRuns[i] = TestRunDtoMapper.map(loadedTestRun);
+                }
+                callback(testRuns, totalCount);
+            });
+        });
+    }
+    getLatestTest(testGuid, itemName, callback) {
+        const path = LocalFileSystemPathsHelper.getTestItemPath(itemName, testGuid, this.currentPage);
+        this.loadJsonsByPaths([path], 0, new Array(), false, true, (response) => {
+            const testRun = JSON.parse(response, this.reviveRun);
+            const testRunDto = TestRunDtoMapper.map(testRun);
+            callback(testRunDto);
+        });
+    }
+    getTestOutput(t, callback) {
+        const path = LocalFileSystemPathsHelper.getTestItemPath(t.output.itemName, t.testInfo.guid, this.currentPage);
+        this.loadJsonsByPaths([path], 0, new Array(), false, true, (response) => {
+            const testRun = JSON.parse(response, this.reviveRun);
+            const testRunDto = TestOutputDtoMapper.map(testRun);
+            callback(testRunDto);
+        });
+    }
+    getTestScreenshots(testRunDto, callback) {
+        const paths = new Array();
+        const screensInfo = testRunDto.screenshots;
+        for (let j = 0; j < screensInfo.length; j++) {
+            paths[j] = `./../tests/${testRunDto.testInfo.guid}/img/${screensInfo[j].itemName}`;
+        }
+        const testScreenshots = new Array();
+        this.loadJsonsByPaths(paths, 0, new Array(), false, false, (responses) => {
+            for (let i = 0; i < responses.length; i++) {
+                const loadedScreenshot = JSON.parse(responses[i], this.reviveRun);
+                testScreenshots[i] = TestScreenshotDtoMapper.map(loadedScreenshot);
+            }
+            callback(testScreenshots);
+        });
+    }
+    getRunTests(runDto, callback) {
+        const paths = new Array();
+        var test;
+        var testDto;
+        const testsInfo = runDto.testsInfo;
+        for (let j = 0; j < testsInfo.length; j++) {
+            paths[j] = `./../tests/${testsInfo[j].guid}/${testsInfo[j].itemName}`;
+        }
+        this.loadJsonsByPaths(paths, 0, new Array(), true, true, (response, c, i) => {
+            test = JSON.parse(response, this.reviveRun);
+            testDto = TestRunDtoMapper.map(test);
+            callback(testDto, c, i);
+        });
+    }
+    loadJsonsByPaths(paths, ind, responses, showProgressBar, callbackForEach, callback) {
+        const count = paths.length;
+        if (showProgressBar) {
+            this.progressBar.reset(count);
+            if (ind === 0) {
+                this.progressBar.show();
+            }
+            if (ind >= count) {
+                this.progressBar.hide();
+                return;
+            }
+        }
+        if (!callbackForEach && ind >= count) {
+            callback(responses, count, ind);
+        }
+        if (ind >= count) {
+            return;
+        }
+        const req = new XMLHttpRequest();
+        req.overrideMimeType("application/json");
+        req.open("get", paths[ind], true);
+        req.onreadystatechange = () => {
+            if (req.readyState === 4)
+                if (req.status !== 200 && req.status !== 0) {
+                    console
+                        .log(`Error while loading .json data: '${paths[ind]}'! Request status: ${req.status} : ${req.statusText}`);
+                }
+                else {
+                    responses[ind] = req.responseText;
+                    if (callbackForEach) {
+                        callback(req.responseText, count, ind);
+                    }
+                    if (showProgressBar) {
+                        this.progressBar.onLoaded(ind);
+                    }
+                    ind++;
+                    this.loadJsonsByPaths(paths, ind, responses, showProgressBar, callbackForEach, callback);
+                }
+        };
+        req.timeout = 2000;
+        req.ontimeout = () => {
+            console.log(`Timeout while loading .json data: '${paths[ind]}'! Request status: ${req.status} : ${req.statusText}`);
+        };
+        req.send(null);
+    }
+}
 class TestRunHelper {
     static getColorByResult(result) {
         switch (result) {
@@ -74,8 +602,17 @@ class TestRunHelper {
     static getOutput(t) {
         return t.output === "" ? "-" : t.output;
     }
+    static getExtraOutput(t) {
+        return t.suiteOutput === "" ? "-" : t.suiteOutput;
+    }
     static getMessage(t) {
         return t.testMessage === "" ? "-" : t.testMessage;
+    }
+    static getPriority(t) {
+        return t.priority === "" || t.priority === undefined || t.priority === null ? "-" : t.priority;
+    }
+    static getTestType(t) {
+        return t.testType === "" || t.testType === undefined || t.testType === null ? "-" : t.testType;
     }
     static getDescription(t) {
         return (t.description === "" || t.description === undefined) ? "-" : t.description;
@@ -453,67 +990,7 @@ class Differ {
     }
 }
 Differ.separators = [" ", "<", ">", "/", ".", "?", "!"];
-class UrlHelper {
-    static insertParam(key, value) {
-        const paramsPart = document.location.search.substr(1);
-        window.history.pushState("", "", "");
-        const p = `${key}=${value}`;
-        if (paramsPart === "") {
-            window.history.pushState("", "", `?${p}`);
-        }
-        else {
-            let params = paramsPart.split("&");
-            const paramToChange = params.find((par) => par.split("=")[0] === key);
-            if (paramToChange != undefined) {
-                if (params.length === 1) {
-                    params = [p];
-                }
-                else {
-                    const index = params.indexOf(paramToChange);
-                    params.splice(index, 1);
-                    params.push(p);
-                }
-            }
-            else {
-                params.push(p);
-            }
-            window.history.pushState("", "", `?${params.join("&")}`);
-        }
-    }
-    static getParam(key) {
-        const paramsPart = document.location.search.substr(1);
-        if (paramsPart === "") {
-            return "";
-        }
-        else {
-            const params = paramsPart.split("&");
-            const paramToGet = params.find((par) => par.split("=")[0] === key);
-            if (paramToGet != undefined) {
-                return paramToGet.split("=")[1];
-            }
-            else {
-                return "";
-            }
-        }
-    }
-    static removeParam(key) {
-        const paramsPart = document.location.search.substr(1);
-        window.history.pushState("", "", "");
-        if (paramsPart === "") {
-            return;
-        }
-        else {
-            let params = paramsPart.split("&");
-            const paramToRemove = params.find((par) => par.split("=")[0] === key);
-            if (paramToRemove != undefined) {
-                const index = params.indexOf(paramToRemove);
-                params.splice(index, 1);
-            }
-            window.history.pushState("", "", `?${params.join("&")}`);
-        }
-    }
-}
-class PathsHelper {
+class LocalFileSystemPathsHelper {
     static getRunPath(pt, guid) {
         switch (pt) {
             case PageType.TestRunsPage:
@@ -521,7 +998,7 @@ class PathsHelper {
             case PageType.TestRunPage:
                 return `./run_${guid}.json`;
             case PageType.TestPage:
-                return `./../../runs/run_${guid}.json`;
+                return `./../runs/run_${guid}.json`;
             default:
                 return "";
         }
@@ -562,226 +1039,57 @@ class PathsHelper {
                 return "";
         }
     }
-    static getTestPath(testGuid, testFileName, pt) {
+    static getTestItemPath(itemName, guid, pt) {
         switch (pt) {
             case PageType.TestRunsPage:
-                return `./tests/${testGuid}/${testFileName}`;
+                return `./tests/${guid}/${itemName}`;
             case PageType.TestRunPage:
-                return `./../tests/${testGuid}/${testFileName}`;
+                return `./../tests/${guid}/${itemName}`;
             case PageType.TestPage:
-                return `./${testGuid}/${testFileName}`;
+                return `./${guid}/${itemName}`;
             default:
                 return "";
         }
     }
 }
-class TabsHelper {
-    static showTab(idToShow, caller, pageTabsIds) {
-        if (pageTabsIds.indexOf(idToShow) <= -1) {
-            return;
-        }
-        UrlHelper.insertParam("currentTab", idToShow);
-        const tabs = document.getElementsByClassName("tabnav-tab");
-        for (let i = 0; i < tabs.length; i++) {
-            tabs[i].classList.remove("selected");
-        }
-        caller.className += " selected";
-        pageTabsIds.forEach((id) => {
-            document.getElementById(id).style.display = "none";
-        });
-        document.getElementById(idToShow).style.display = "";
-    }
-}
-class ProgressBar {
-    constructor(total) {
-        this.barId = "progress-bar";
-        this.barDivId = "progress-bar-div";
-        this.barTextId = "progress-bar-line";
-        this.reset(total);
-    }
-    reset(total) {
-        this.total = total;
-        this.current = 0;
-    }
-    show() {
-        document.getElementById(this.barId).style.display = "";
-        document.getElementById(this.barId).innerHTML = `<div id="${this.barDivId}"><div id="${this.barTextId}"></div></div>`;
-        document.getElementById(this.barId).style.position = "relative";
-        document.getElementById(this.barId).style.width = "100%";
-        document.getElementById(this.barId).style.height = "20px";
-        document.getElementById(this.barId).style.backgroundColor = Color.unknown;
-        document.getElementById(this.barDivId).style.position = "absolute";
-        document.getElementById(this.barDivId).style.width = "10%";
-        document.getElementById(this.barDivId).style.height = "100%";
-        document.getElementById(this.barDivId).style.backgroundColor = Color.passed;
-        document.getElementById(this.barTextId).style.textAlign = "center";
-        document.getElementById(this.barTextId).style.lineHeight = "20px";
-        document.getElementById(this.barTextId).style.color = "white";
-    }
-    onLoaded(count) {
-        this.current += count;
-        const percentage = 100 * this.current / this.total;
-        const pString = percentage.toString().split(".")[0] + "%";
-        document.getElementById(this.barDivId).style.width = pString;
-        document.getElementById(this.barTextId).innerHTML = pString;
-    }
-    hide() {
-        document.getElementById(this.barId).innerHTML = "";
-        document.getElementById(this.barId).style.display = "none";
-    }
-}
-class JsonLoader {
-    constructor(pt) {
-        this.pageType = pt;
-        this.progressBar = new ProgressBar(1);
-    }
-    loadRunJson(runGuid, callback) {
-        const path = PathsHelper.getRunPath(this.pageType, runGuid);
-        this.loadJson(path, callback);
-    }
-    loadRunsJson(callback) {
-        const path = PathsHelper.getRunsPath(this.pageType);
-        this.loadJson(path, callback);
-    }
-    loadReportSettingsJson(callback) {
-        const path = PathsHelper.getReportSettingsPath(this.pageType);
-        this.loadJson(path, callback);
-    }
-    loadTestJson(testGuid, testFileName, callback) {
-        const path = PathsHelper.getTestPath(testGuid, testFileName, this.pageType);
-        this.loadJson(path, callback);
-    }
-    loadTestsJson(testGuid, callback) {
-        const path = PathsHelper.getTestsPath(testGuid, this.pageType);
-        this.loadJson(path, callback);
-    }
-    loadJson(path, callback) {
+class Controller {
+    static init(pagetype, callback) {
+        const settingsPath = LocalFileSystemPathsHelper.getReportSettingsPath(pagetype);
         const req = new XMLHttpRequest();
         req.overrideMimeType("application/json");
-        req.open("get", path, true);
+        req.open("get", settingsPath, true);
         req.onreadystatechange = () => {
-            if (req.readyState === 4)
+            if (req.readyState === 4) {
                 if (req.status !== 200 && req.status !== 0) {
                     console
-                        .log(`Error while loading .json data: '${path}'! Request status: ${req.status} : ${req.statusText}`);
+                        .log(`Error while loading .json data: '${settingsPath}'! Status: ${req.status} : ${req
+                        .statusText}`);
                 }
                 else {
-                    callback(req.responseText);
+                    const reportSettings = JSON.parse(req.responseText);
+                    this.reportSettings = reportSettings;
+                    this.dataService = new LocalFileSystemDataService();
+                    this.dataService.reportSettings = reportSettings;
+                    callback(this.dataService, this.reportSettings);
                 }
+            }
         };
         req.timeout = 2000;
         req.ontimeout = () => {
-            console.log(`Timeout while loading .json data: '${path}'! Request status: ${req.status} : ${req.statusText}`);
+            console.log(`Timeout while loading .json data: '${settingsPath}'! Status: ${req.status} : ${req.statusText}`);
         };
         req.send(null);
-    }
-    loadAllJsons(paths, ind, resps, callback) {
-        const count = paths.length;
-        if (ind >= count) {
-            callback(resps);
-            return;
-        }
-        const req = new XMLHttpRequest();
-        req.overrideMimeType("application/json");
-        req.open("get", paths[ind], true);
-        req.onreadystatechange = () => {
-            if (req.readyState === 4)
-                if (req.status !== 200 && req.status !== 0) {
-                    console
-                        .log(`Error while loading .json data: '${paths[ind]}'! Request status: ${req.status} : ${req.statusText}`);
-                }
-                else {
-                    resps[ind] = req.responseText;
-                    ind++;
-                    this.loadAllJsons(paths, ind, resps, callback);
-                }
-        };
-        req.timeout = 2000;
-        req.ontimeout = () => {
-            console.log(`Timeout while loading .json data: '${paths[ind]}'! Request status: ${req.status} : ${req.statusText}`);
-        };
-        req.send(null);
-    }
-    loadJsons(paths, ind, callback) {
-        const count = paths.length;
-        this.progressBar.reset(count);
-        if (ind === 0) {
-            this.progressBar.show();
-        }
-        if (ind >= count) {
-            this.progressBar.hide();
-            return;
-        }
-        const req = new XMLHttpRequest();
-        req.overrideMimeType("application/json");
-        req.open("get", paths[ind], true);
-        req.onreadystatechange = () => {
-            if (req.readyState === 4)
-                if (req.status !== 200 && req.status !== 0) {
-                    console
-                        .log(`Error while loading .json data: '${paths[ind]}'! Request status: ${req.status} : ${req.statusText}`);
-                }
-                else {
-                    callback(req.responseText, count, ind);
-                    this.progressBar.onLoaded(ind);
-                    ind++;
-                    this.loadJsons(paths, ind, callback);
-                }
-        };
-        req.timeout = 2000;
-        req.ontimeout = () => {
-            console.log(`Timeout while loading .json data: '${paths[ind]}'! Request status: ${req.status} : ${req.statusText}`);
-        };
-        req.send(null);
-    }
-    static reviveRun(key, value) {
-        if (key === "start" || key === "finish" || key === "date")
-            return new Date(value);
-        return value;
-    }
-}
-class DateFormatter {
-    static format(date) {
-        if (date < new Date(2000, 1)) {
-            return "-";
-        }
-        const year = `${date.getFullYear()}`;
-        const month = this.correctString(`${date.getMonth() + 1}`);
-        const day = this.correctString(`${date.getDate()}`);
-        const hour = this.correctString(`${date.getHours()}`);
-        const minute = this.correctString(`${date.getMinutes()}`);
-        const second = this.correctString(`${date.getSeconds()}`);
-        return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
-    }
-    static diff(start, finish) {
-        const timeDifference = (finish.getTime() - start.getTime());
-        const dDate = new Date(timeDifference);
-        const dHours = dDate.getUTCHours();
-        const dMins = dDate.getUTCMinutes();
-        const dSecs = dDate.getUTCSeconds();
-        const dMilliSecs = dDate.getUTCMilliseconds();
-        const readableDifference = this.correctNumber(dHours) + ":" + this.correctNumber(dMins) + ":"
-            + this.correctNumber(dSecs) + "." + this.correctNumber(dMilliSecs);
-        return readableDifference;
-    }
-    static correctString(s) {
-        if (s.length === 1) {
-            return `0${s}`;
-        }
-        else
-            return s;
-    }
-    static correctNumber(n) {
-        if (n >= 0 && n < 10) {
-            return `0${n}`;
-        }
-        else
-            return `${n}`;
     }
 }
 class RunPageUpdater {
-    static updateCopyright() {
-        document.getElementById("copyright").innerHTML = `Copyright 2015 - 2018 © GhpReporter (version ${this.reportSettings.coreVersion})`;
+    static updateCopyright(coreVersion) {
+        document.getElementById("copyright").innerHTML = `Copyright 2015 - 2018 © GhpReporter (version ${coreVersion})`;
+    }
+    static updateReportName(reportName) {
+        if (reportName === undefined) {
+            reportName = "GHPReport";
+        }
+        document.getElementById("report-name").innerHTML = `${reportName}`;
     }
     static updateRunInformation(run) {
         document.getElementById("name").innerHTML = `<b>Name:</b> ${run.name}`;
@@ -793,6 +1101,43 @@ class RunPageUpdater {
     static updateTitle(run) {
         document.getElementById("page-title").innerHTML = run.name;
     }
+    static getSummaryPlotSize(plotDiv) {
+        var p = plotDiv.parentElement;
+        var w = Math.max(300, Math.min(p.offsetWidth, 800));
+        var h = Math.max(400, Math.min(p.offsetHeight, 500));
+        return { width: 0.95 * w, height: 0.95 * h };
+    }
+    static getTimelinePlotSize(plotDiv) {
+        var p = plotDiv.parentElement.parentElement.parentElement;
+        var w = Math.max(300, Math.min(p.offsetWidth, 1000));
+        var h = Math.max(400, Math.min(p.offsetHeight, 500));
+        return { width: 1.00 * w, height: 1.00 * h };
+    }
+    static updateBriefResults(run) {
+        const s = run.summary;
+        document.getElementById("run-results").innerHTML = `<div class="mx-4 py-2 border-bottom"><div>
+            <a class="f6 text-bold link-gray-dark d-flex no-underline wb-break-all">Total</a>
+            <p class="f6 text-gray mb-2">${s.total}</p>
+            </div></div><div class="mx-4 py-2 border-bottom"><div>
+            <a class="f6 text-bold link-gray-dark d-flex no-underline wb-break-all">Success</a>
+            <p class="f6 text-gray mb-2">${s.success}</p>
+            </div></div><div class="mx-4 py-2 border-bottom"><div>
+            <a class="f6 text-bold link-gray-dark d-flex no-underline wb-break-all">Errors</a>
+            <p class="f6 text-gray mb-2">${s.errors}</p>
+            </div></div><div class="mx-4 py-2 border-bottom"><div>
+            <a class="f6 text-bold link-gray-dark d-flex no-underline wb-break-all">Failures</a>
+            <p class="f6 text-gray mb-2">${s.failures}</p>
+            </div></div><div class="mx-4 py-2 border-bottom"><div>
+            <a class="f6 text-bold link-gray-dark d-flex no-underline wb-break-all">Inconclusive</a>
+            <p class="f6 text-gray mb-2">${s.inconclusive}</p>
+            </div></div><div class="mx-4 py-2 border-bottom"><div>
+            <a class="f6 text-bold link-gray-dark d-flex no-underline wb-break-all">Ignored</a>
+            <p class="f6 text-gray mb-2">${s.ignored}</p>
+            </div></div><div class="mx-4 py-2 border-bottom"><div>
+            <a class="f6 text-bold link-gray-dark d-flex no-underline wb-break-all">Unknown</a>
+            <p class="f6 text-gray mb-2">${s.unknown}</p>
+            </div></div>`;
+    }
     static updateSummary(run) {
         const s = run.summary;
         document.getElementById("total").innerHTML = `<b>Total:</b> ${s.total}`;
@@ -803,7 +1148,8 @@ class RunPageUpdater {
         document.getElementById("ignored").innerHTML = `<b>Ignored:</b> ${s.ignored}`;
         document.getElementById("unknown").innerHTML = `<b>Unknown:</b> ${s.unknown}`;
         const pieDiv = document.getElementById("summary-pie");
-        Plotly.newPlot(pieDiv, [
+        var size = this.getSummaryPlotSize(pieDiv);
+        var data = [
             {
                 values: [s.success, s.errors, s.failures, s.inconclusive, s.ignored, s.unknown],
                 labels: ["Passed", "Broken", "Failed", "Inconclusive", "Ignored", "Unknown"],
@@ -826,25 +1172,39 @@ class RunPageUpdater {
                 type: "pie",
                 hole: 0.35
             }
-        ], {
-            margin: { t: 0 }
-        });
-    }
-    static setTestsList(tests) {
-        let list = "";
-        const c = tests.length;
-        for (let i = 0; i < c; i++) {
-            const t = tests[i];
-            list += `<li id=$test-${t.testInfo.guid}>Test #${c - i - 1}: <a href="./../tests/index.html?testGuid=${t.testInfo.guid}&testFile=${t.testInfo.fileName}">${t.name}</a></li>`;
-        }
-        document.getElementById("all-tests").innerHTML = list;
+        ];
+        var layout = {
+            margin: { t: 20 },
+            width: size.width,
+            height: size.height
+        };
+        Plotly.react(pieDiv, data, layout);
     }
     static addTest(t, c, i) {
         const ti = t.testInfo;
-        const testHref = `./../tests/index.html?testGuid=${ti.guid}&testFile=${ti.fileName}`;
-        const testLi = `<li id="test-${ti.guid}" style="list-style-type: none;" class="${TestRunHelper.getResult(t)}">
-            <span class="octicon octicon-primitive-square" style="color: ${TestRunHelper.getColor(t)};"></span>
+        const color = TestRunHelper.getColor(t);
+        const result = TestRunHelper.getResult(t);
+        const testHref = `./../tests/index.html?testGuid=${ti.guid}&itemName=${t.testInfo.itemName}`;
+        const testLi = `<li id="test-${ti.guid}" class="${result} ghpr-test" style="color: white;">
+            <span class="ghpr-test-list-span" style="background-color: ${color};"></span>
             <a href="${testHref}"> ${t.name}</a></li>`;
+        const failedTestLi = `<li><div class="width-full text-bold">
+                                <span class="ghpr-test-list-span" style="background-color: ${color};"></span>
+                                <a class="f5 mb-2" href="${testHref}"> ${t.name}</a>
+                              </div></li>`;
+        if (result === TestResult.Failed) {
+            document.getElementById("recent-test-failures").innerHTML += failedTestLi;
+        }
+        this.plotlyTimelineData.push({
+            x: [DateFormatter.format(ti.start), DateFormatter.format(ti.finish)],
+            y: [1, 1],
+            type: "scatter",
+            opacity: 0.5,
+            line: { color: color, width: 20 },
+            mode: "lines",
+            name: t.name,
+            showlegend: false
+        });
         const nameIndex = t.fullName.lastIndexOf(t.name);
         let nameRemoved = false;
         let fn = t.fullName;
@@ -857,7 +1217,7 @@ class RunPageUpdater {
         }
         const arr = fn.split(".");
         const len1 = arr.length;
-        for (let j = arr.length - 1; j >= 0; j -= 1) {
+        for (let j = len1 - 1; j >= 0; j -= 1) {
             if (/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(arr[j])) {
                 arr.splice(j, 1);
             }
@@ -869,25 +1229,37 @@ class RunPageUpdater {
         }
         const ids = new Array();
         for (let j = 0; j < len2; j++) {
-            ids[j] = `id-${arr.slice(0, j + 1).join(".").replace(/\s/g, "_")}`;
+            ids[j] = `hierarchical-${arr.slice(0, j + 1).join(".").replace(/\s/g, "_")}`;
         }
+        const hierarchicalListElement = document.getElementById("all-tests-hierarchical");
         for (let j = 0; j <= len2; j++) {
-            const el = document.getElementById(ids[j]);
+            const el = hierarchicalListElement.querySelectorAll(`li[id="${ids[j]}"]`)[0];
             if (el === null || el === undefined) {
                 const li = `<li id="${ids[j]}" class="test-suite"><a>${arr[j]}</a><ul></ul></li>`;
                 if (j === 0) {
-                    document.getElementById("all-tests").innerHTML += li;
+                    hierarchicalListElement.innerHTML += li;
                 }
                 else {
+                    const firstUl = hierarchicalListElement.querySelector(`li[id="${ids[j - 1]}"]`).getElementsByTagName("ul")[0];
                     if (j !== len2) {
-                        document.getElementById(ids[j - 1]).getElementsByTagName("ul")[0].innerHTML += li;
+                        firstUl.innerHTML += li;
                     }
                     else {
-                        document.getElementById(ids[j - 1]).getElementsByTagName("ul")[0].innerHTML += testLi;
+                        firstUl.innerHTML += testLi;
                     }
                 }
             }
         }
+        const namespace = `${arr.join(".").replace(/\s/g, "_")}`;
+        const collapsedListElement = document.getElementById("all-tests-collapsed");
+        const collapsedId = `collapsed-${namespace}`;
+        const el = collapsedListElement.querySelectorAll(`li[id="${collapsedId}"]`)[0];
+        if (el === null || el === undefined) {
+            collapsedListElement.innerHTML +=
+                `<li id="${collapsedId}" class="test-suite" style="list-style: none;"><a>${namespace}</a><ul></ul></li>`;
+        }
+        const li = collapsedListElement.querySelector(`li[id="${collapsedId}"]`).getElementsByTagName("ul")[0];
+        li.innerHTML += testLi;
         const btns = document.getElementById("test-result-filter-buttons").getElementsByTagName("button");
         for (let i = 0; i < btns.length; i++) {
             const btn = btns[i];
@@ -905,6 +1277,18 @@ class RunPageUpdater {
                 }
             }
         }
+    }
+    static toHierarchicalList() {
+        const collapsedList = document.getElementById("all-tests-collapsed");
+        const hierarchicalList = document.getElementById("all-tests-hierarchical");
+        collapsedList.style.display = "none";
+        hierarchicalList.style.display = "";
+    }
+    static toCollapsedList() {
+        const collapsedList = document.getElementById("all-tests-collapsed");
+        const hierarchicalList = document.getElementById("all-tests-hierarchical");
+        collapsedList.style.display = "";
+        hierarchicalList.style.display = "none";
     }
     static makeCollapsible() {
         const targets = document.getElementsByClassName("test-suite");
@@ -936,6 +1320,21 @@ class RunPageUpdater {
                         const t = tests[j];
                         t.style.display = "none";
                     }
+                    const lis = document.getElementsByClassName("test-suite");
+                    for (let j = 0; j < lis.length; j++) {
+                        const li = lis[j];
+                        const liTests = li.getElementsByClassName("ghpr-test");
+                        let anyTestsDisplayed = false;
+                        for (let k = 0; k < liTests.length; k++) {
+                            const liTest = liTests[k];
+                            if (liTest.style.display !== "none") {
+                                anyTestsDisplayed = true;
+                            }
+                        }
+                        if (!anyTestsDisplayed) {
+                            li.style.display = "none";
+                        }
+                    }
                 }
                 else {
                     btn.classList.remove("disabled");
@@ -943,51 +1342,86 @@ class RunPageUpdater {
                         const t = tests[j];
                         t.style.display = "";
                     }
+                    const lis = document.getElementsByClassName("test-suite");
+                    for (let j = 0; j < lis.length; j++) {
+                        const li = lis[j];
+                        const liTests = li.getElementsByClassName("ghpr-test");
+                        let anyTestsDisplayed = false;
+                        for (let k = 0; k < liTests.length; k++) {
+                            const liTest = liTests[k];
+                            if (liTest.style.display !== "none") {
+                                anyTestsDisplayed = true;
+                            }
+                        }
+                        if (anyTestsDisplayed) {
+                            li.style.display = "";
+                        }
+                    }
                 }
             };
         }
     }
     static updateRunPage(runGuid) {
-        let run;
-        this.loader.loadRunJson(runGuid, (response) => {
-            run = JSON.parse(response, JsonLoader.reviveRun);
-            if (run.name === "") {
-                run.name = `${DateFormatter.format(run.runInfo.start)} - ${DateFormatter.format(run.runInfo.finish)}`;
-            }
-            UrlHelper.insertParam("runGuid", run.runInfo.guid);
-            this.updateRunInformation(run);
-            this.updateSummary(run);
-            this.updateTitle(run);
-            this.updateTestFilterButtons();
-            this.updateTestsList(run);
-            this.updateCopyright();
+        Controller.init(PageType.TestRunPage, (dataService, reportSettings) => {
+            dataService.fromPage(PageType.TestRunPage).getRun(runGuid, (runDto) => {
+                UrlHelper.insertParam("runGuid", runDto.runInfo.guid);
+                this.plotlyTimelineData = new Array();
+                this.updateReportName(reportSettings.reportName);
+                this.updateRunInformation(runDto);
+                this.updateSummary(runDto);
+                this.updateBriefResults(runDto);
+                this.updateTitle(runDto);
+                this.updateTestFilterButtons();
+                this.updateTestsList(runDto);
+                this.updateTimeline();
+                this.updateCopyright(reportSettings.coreVersion);
+                window.addEventListener("resize", () => {
+                    const summaryPieDiv = document.getElementById("summary-pie");
+                    var summarySize = this.getSummaryPlotSize(summaryPieDiv);
+                    Plotly.relayout(summaryPieDiv, { width: summarySize.width, height: summarySize.height });
+                    const timelinePieDiv = document.getElementById("run-timeline-chart");
+                    var timelineSize = this.getTimelinePlotSize(timelinePieDiv);
+                    Plotly.relayout(timelinePieDiv, { width: timelineSize.width, height: timelineSize.height });
+                });
+            });
         });
-        return run;
+    }
+    static updateTimeline() {
+        const timelineDiv = document.getElementById("run-timeline-chart");
+        var size = this.getTimelinePlotSize(timelineDiv);
+        var layout = {
+            title: "Timeline",
+            yaxis: {
+                showgrid: false,
+                zeroline: false,
+                showline: false,
+                showticklabels: false
+            },
+            width: size.width,
+            height: size.height
+        };
+        Plotly.react(timelineDiv, this.plotlyTimelineData, layout);
     }
     static updateTestsList(run) {
-        const paths = new Array();
-        var test;
         document.getElementById("btn-back").setAttribute("href", `./../index.html`);
-        document.getElementById("all-tests").innerHTML = "";
-        const files = run.testRunFiles;
-        for (let i = 0; i < files.length; i++) {
-            paths[i] = `./../tests/${files[i]}`;
-        }
+        document.getElementById("all-tests-hierarchical").innerHTML = "";
+        document.getElementById("recent-test-failures").innerHTML = "";
         var index = 0;
-        this.loader.loadJsons(paths, 0, (response, c, i) => {
-            test = JSON.parse(response, JsonLoader.reviveRun);
-            this.addTest(test, c, i);
-            if (i === c - 1)
-                this.makeCollapsible();
-            index++;
+        Controller.init(PageType.TestRunPage, (dataService, reportSettings) => {
+            dataService.fromPage(PageType.TestRunPage).getRunTests(run, (testRunDto, c, i) => {
+                this.addTest(testRunDto, c, i);
+                if (i === c - 1) {
+                    this.makeCollapsible();
+                    this.updateTimeline();
+                }
+                index++;
+            });
         });
     }
     static loadRun(index) {
-        let runInfos;
-        this.loader.loadRunsJson((response) => {
-            runInfos = JSON.parse(response, JsonLoader.reviveRun);
-            runInfos.sort(Sorter.itemInfoSorterByFinishDateFuncDesc);
-            this.runsToShow = this.reportSettings.runsToDisplay >= 1 ? Math.min(runInfos.length, this.reportSettings.runsToDisplay) : runInfos.length;
+        Controller.dataService.fromPage(PageType.TestRunPage).getRunInfos((runInfoDtos) => {
+            let runsToDisplay = Controller.reportSettings.runsToDisplay;
+            this.runsToShow = runsToDisplay >= 1 ? Math.min(runInfoDtos.length, runsToDisplay) : runInfoDtos.length;
             if (index === undefined || index.toString() === "NaN") {
                 index = 0;
             }
@@ -998,7 +1432,7 @@ class RunPageUpdater {
                 this.disableBtn("btn-prev");
             }
             this.currentRunIndex = index;
-            this.updateRunPage(runInfos[index].guid);
+            this.updateRunPage(runInfoDtos[index].guid);
         });
     }
     static tryLoadRunByGuid() {
@@ -1007,15 +1441,14 @@ class RunPageUpdater {
             this.loadRun(undefined);
             return;
         }
-        let runInfos;
-        this.loader.loadRunsJson((response) => {
-            runInfos = JSON.parse(response, JsonLoader.reviveRun);
-            runInfos.sort(Sorter.itemInfoSorterByFinishDateFuncDesc);
-            this.runsToShow = this.reportSettings.runsToDisplay >= 1 ? Math.min(runInfos.length, this.reportSettings.runsToDisplay) : runInfos.length;
-            const runInfo = runInfos.find((r) => r.guid === guid);
+        Controller.dataService.fromPage(PageType.TestRunPage).getRunInfos((runInfoDtos) => {
+            let runsToDisplay = Controller.reportSettings.runsToDisplay;
+            this.runsToShow = runsToDisplay >= 1
+                ? Math.min(runInfoDtos.length, runsToDisplay) : runInfoDtos.length;
+            const runInfo = runInfoDtos.find((r) => r.guid === guid);
             if (runInfo != undefined) {
                 this.enableBtns();
-                let index = runInfos.indexOf(runInfo);
+                let index = runInfoDtos.indexOf(runInfo);
                 if (index === 0) {
                     this.disableBtn("btn-next");
                 }
@@ -1073,8 +1506,7 @@ class RunPageUpdater {
         this.loadRun(undefined);
     }
     static initializePage() {
-        this.loader.loadReportSettingsJson((response) => {
-            this.reportSettings = JSON.parse(response);
+        Controller.init(PageType.TestRunPage, (dateService, reportSettings) => {
             const isLatest = UrlHelper.getParam("loadLatest");
             if (isLatest !== "true") {
                 UrlHelper.removeParam("loadLatest");
@@ -1093,28 +1525,58 @@ class RunPageUpdater {
         TabsHelper.showTab(idToShow, caller, this.runPageTabsIds);
     }
 }
-RunPageUpdater.loader = new JsonLoader(PageType.TestRunPage);
-RunPageUpdater.runPageTabsIds = ["run-main-stats", "run-test-list"];
+RunPageUpdater.reviveRun = JsonParser.reviveRun;
+RunPageUpdater.plotlyTimelineData = new Array();
+RunPageUpdater.runPageTabsIds = ["run-main-stats", "run-test-list", "run-timeline"];
 class ReportPageUpdater {
     static updateLatestRunInfo(latestRun) {
         document.getElementById("start").innerHTML = `<b>Start datetime:</b> ${DateFormatter.format(latestRun.runInfo.start)}`;
         document.getElementById("finish").innerHTML = `<b>Finish datetime:</b> ${DateFormatter.format(latestRun.runInfo.finish)}`;
         document.getElementById("duration").innerHTML = `<b>Duration:</b> ${DateFormatter.diff(latestRun.runInfo.start, latestRun.runInfo.finish)}`;
     }
-    static updateCopyright() {
-        document.getElementById("copyright").innerHTML = `Copyright 2015 - 2018 © GhpReporter (version ${this.reportSettings.coreVersion})`;
+    static updateReportName(reportName) {
+        if (reportName === undefined) {
+            reportName = "GHPReport";
+        }
+        document.getElementById("report-name").innerHTML = `${reportName}`;
+    }
+    static updateProjectName(projectName) {
+        if (projectName === undefined) {
+            projectName = "GHPReport";
+        }
+        document.getElementById("project-name").innerHTML = `${projectName}`;
+    }
+    static updateCopyright(coreVersion) {
+        document.getElementById("copyright").innerHTML = `Copyright 2015 - 2018 © GhpReporter (version ${coreVersion})`;
     }
     static updateRunsList(runs) {
-        let list = "";
+        let fullList = "";
+        let recentList = "";
+        let runsResultsList = "";
         const c = runs.length;
         for (let i = 0; i < c; i++) {
             const r = runs[i];
             if (r.name === "") {
                 r.name = `${DateFormatter.format(r.runInfo.start)} - ${DateFormatter.format(r.runInfo.finish)}`;
             }
-            list += `<li id=$run-${r.runInfo.guid}>Run #${c - i - 1}: <a href="./runs/index.html?runGuid=${r.runInfo.guid}">${r.name}</a></li>`;
+            fullList += `<li id=$run-${r.runInfo.guid}>Run #${c - i - 1}: <a href="./runs/index.html?runGuid=${r.runInfo.guid}">${r.name}</a></li>`;
+            recentList += `<li id=$run-${r.runInfo.guid}><div class="width-full text-bold">
+                            <a class="d-flex flex-items-baseline f5 mb-2" href="./runs/index.html?runGuid=${r.runInfo.guid}">${r.name}</a>
+                            </div></li>`;
+            const bb = i === c - 1 ? "" : "border-bottom";
+            let passed = r.summary.success === r.summary.total;
+            const status = passed ? "All tests passed" : "Some errors detected";
+            const statusIconPath = passed ? "./src/octicons/check.svg" : "./src/octicons/alert.svg";
+            runsResultsList += `<div class="mx-4 py-2 my-2 ${bb}"><div class="mb-3">
+                    <a class="f6 text-bold link-gray-dark d-flex no-underline wb-break-all">${r.name}</a>
+                    <p class="f6 text-gray mb-2"><img src="${statusIconPath}" class="ghpr-tabicon" alt=""/>
+                        <b style="padding-left: 10px;">Status:</b> ${status}
+                    </p>
+                </div></div>`;
         }
-        document.getElementById("all-runs").innerHTML = list;
+        document.getElementById("all-runs").innerHTML = fullList;
+        document.getElementById("recent-runs").innerHTML = recentList;
+        document.getElementById("runs-results").innerHTML = runsResultsList;
     }
     static updateRunsInfo(runs, totalFiles) {
         document.getElementById("total").innerHTML = `<b>Loaded runs:</b> ${runs.length}`;
@@ -1136,6 +1598,7 @@ class ReportPageUpdater {
         const unknownX = new Array();
         const tickvals = new Array();
         const ticktext = new Array();
+        const runGuids = new Array();
         const c = runs.length;
         for (let i = 0; i < c; i++) {
             let s = runs[i].summary;
@@ -1154,19 +1617,22 @@ class ReportPageUpdater {
             unknownX[i] = j;
             tickvals[i] = j;
             ticktext[i] = `run ${j}`;
+            let ri = runs[i].runInfo;
+            runGuids[i] = `${ri.guid}`;
         }
         const t = "bar";
         const hi = "y";
         plotlyData = [
-            { x: unknownX, y: unknownY, name: "unknown", type: t, hoverinfo: hi, marker: { color: Color.unknown } },
-            { x: inconclX, y: inconclY, name: "inconclusive", type: t, hoverinfo: hi, marker: { color: Color.inconclusive } },
-            { x: ignoredX, y: ignoredY, name: "ignored", type: t, hoverinfo: hi, marker: { color: Color.ignored } },
-            { x: brokenX, y: brokenY, name: "broken", type: t, hoverinfo: hi, marker: { color: Color.broken } },
-            { x: failedX, y: failedY, name: "failed", type: t, hoverinfo: hi, marker: { color: Color.failed } },
-            { x: passedX, y: passedY, name: "passed", type: t, hoverinfo: hi, marker: { color: Color.passed } }
+            { x: unknownX, y: unknownY, name: "unknown", customdata: runGuids, type: t, hoverinfo: hi, marker: { color: Color.unknown } },
+            { x: inconclX, y: inconclY, name: "inconclusive", customdata: runGuids, type: t, hoverinfo: hi, marker: { color: Color.inconclusive } },
+            { x: ignoredX, y: ignoredY, name: "ignored", customdata: runGuids, type: t, hoverinfo: hi, marker: { color: Color.ignored } },
+            { x: brokenX, y: brokenY, name: "broken", customdata: runGuids, type: t, hoverinfo: hi, marker: { color: Color.broken } },
+            { x: failedX, y: failedY, name: "failed", customdata: runGuids, type: t, hoverinfo: hi, marker: { color: Color.failed } },
+            { x: passedX, y: passedY, name: "passed", customdata: runGuids, type: t, hoverinfo: hi, marker: { color: Color.passed } }
         ];
-        const pieDiv = document.getElementById("runs-bars");
-        Plotly.newPlot(pieDiv, plotlyData, {
+        const barsDiv = document.getElementById("runs-bars");
+        var size = this.getPlotSize(barsDiv);
+        var layout = {
             title: "Runs statistics",
             xaxis: {
                 tickvals: tickvals,
@@ -1177,54 +1643,78 @@ class ReportPageUpdater {
                 title: "Tests number"
             },
             barmode: "stack",
-            bargap: 0.01
+            bargap: 0.01,
+            width: size.width,
+            height: size.height
+        };
+        Plotly.react(barsDiv, plotlyData, layout);
+        barsDiv.on("plotly_click", (eventData) => {
+            var url = `./runs/index.html?runGuid=${eventData.points[0].customdata}`;
+            var win = window.open(url, "_blank");
+            win.focus();
         });
     }
+    static getPlotSize(plotDiv) {
+        var p = plotDiv.parentElement.parentElement.parentElement.parentElement;
+        var w = Math.max(300, Math.min(p.offsetWidth, 1000));
+        var h = Math.max(400, Math.min(p.offsetHeight, 700));
+        return { width: 0.95 * w, height: 0.85 * h };
+    }
     static updatePage() {
-        let runInfos;
-        const paths = new Array();
-        const r = new Array();
-        const runs = new Array();
-        this.loader.loadRunsJson((response) => {
-            runInfos = JSON.parse(response, JsonLoader.reviveRun);
-            runInfos.sort(Sorter.itemInfoSorterByFinishDateFuncDesc);
-            const runsToLoad = this.reportSettings.runsToDisplay >= 1 ? Math.min(this.reportSettings.runsToDisplay, runInfos.length) : runInfos.length;
-            for (let i = 0; i < runsToLoad; i++) {
-                paths[i] = `runs/run_${runInfos[i].guid}.json`;
-            }
-            this.loader.loadAllJsons(paths, 0, r, (responses) => {
-                for (let i = 0; i < responses.length; i++) {
-                    const loadedRun = JSON.parse(responses[i], JsonLoader.reviveRun);
-                    if (loadedRun.name === "") {
-                        loadedRun.name = `${DateFormatter.format(loadedRun.runInfo.start)} - ${DateFormatter.format(loadedRun.runInfo.finish)}`;
-                    }
-                    runs[i] = loadedRun;
-                }
+        Controller.init(PageType.TestRunsPage, (dataService, reportSettings) => {
+            dataService.fromPage(PageType.TestRunsPage).getLatestRuns((runs, total) => {
                 const latestRun = runs[0];
+                this.updateProjectName(reportSettings.projectName);
+                this.updateReportName(reportSettings.reportName);
                 this.updateLatestRunInfo(latestRun);
                 this.updatePlotlyBars(runs);
-                this.updateRunsInfo(runs, runInfos.length);
+                this.updateRunsInfo(runs, total);
                 this.updateRunsList(runs);
-                this.updateCopyright();
+                this.updateCopyright(reportSettings.coreVersion);
+                window.addEventListener("resize", () => {
+                    const barsDiv = document.getElementById("runs-bars");
+                    var size = this.getPlotSize(barsDiv);
+                    Plotly.relayout(barsDiv, { width: size.width, height: size.height });
+                });
             });
         });
     }
     static initializePage() {
-        this.loader.loadReportSettingsJson((response) => {
-            this.reportSettings = JSON.parse(response);
-            this.updatePage();
-        });
+        this.updatePage();
         this.showTab("runs-stats", document.getElementById("tab-runs-stats"));
     }
     static showTab(idToShow, caller) {
         TabsHelper.showTab(idToShow, caller, this.reportPageTabsIds);
     }
 }
-ReportPageUpdater.loader = new JsonLoader(PageType.TestRunsPage);
 ReportPageUpdater.reportPageTabsIds = ["runs-stats", "runs-list"];
 class TestPageUpdater {
-    static updateCopyright() {
-        document.getElementById("copyright").innerHTML = `Copyright 2015 - 2018 © GhpReporter (version ${this.reportSettings.coreVersion})`;
+    static updateCopyright(coreVersion) {
+        document.getElementById("copyright").innerHTML = `Copyright 2015 - 2018 © GhpReporter (version ${coreVersion})`;
+    }
+    static updateReportName(reportName) {
+        if (reportName === undefined) {
+            reportName = "GHPReport";
+        }
+        document.getElementById("report-name").innerHTML = `${reportName}`;
+    }
+    static updateRecentData(t) {
+        document.getElementById("test-results").innerHTML = `<div class="mx-4 py-2 border-bottom"><div>
+            <a class="f6 text-bold link-gray-dark d-flex no-underline wb-break-all">Start datetime</a>
+            <p class="f6 text-gray mb-2">${DateFormatter.format(t.testInfo.start)}</p>
+            </div></div><div class="mx-4 py-2 border-bottom"><div>
+            <a class="f6 text-bold link-gray-dark d-flex no-underline wb-break-all">Finish datetime</a>
+            <p class="f6 text-gray mb-2">${DateFormatter.format(t.testInfo.finish)}</p>
+            </div></div><div class="mx-4 py-2 border-bottom"><div>
+            <a class="f6 text-bold link-gray-dark d-flex no-underline wb-break-all">Duration</a>
+            <p class="f6 text-gray mb-2">${t.duration.toString()}</p>
+            </div></div><div class="mx-4 py-2 border-bottom"><div>
+            <a class="f6 text-bold link-gray-dark d-flex no-underline wb-break-all">Categories</a>
+            <p class="f6 text-gray mb-2">${TestRunHelper.getCategories(t)}</p>
+            </div></div><div class="mx-4 py-2 border-bottom"><div>
+            <a class="f6 text-bold link-gray-dark d-flex no-underline wb-break-all">Test type</a>
+            <p class="f6 text-gray mb-2">${TestRunHelper.getTestType(t)}</p>
+            </div></div>`;
     }
     static updateMainInformation(t) {
         document.getElementById("page-title").innerHTML = `<b>Test:</b> ${t.name}`;
@@ -1232,8 +1722,8 @@ class TestPageUpdater {
         document.getElementById("full-name").innerHTML = `<b>Full name:</b> ${t.fullName}`;
         document.getElementById("description").innerHTML = `<b>Test description:</b> ${TestRunHelper.getDescription(t)}`;
         document.getElementById("result").innerHTML = `<b>Result:</b> ${TestRunHelper.getColoredResult(t)}`;
-        document.getElementById("priority").innerHTML = `<b>Priority:</b> ${t.priority}`;
-        document.getElementById("test-type").innerHTML = `<b>Test type:</b> ${t.testType}`;
+        document.getElementById("priority").innerHTML = `<b>Priority:</b> ${TestRunHelper.getPriority(t)}`;
+        document.getElementById("test-type").innerHTML = `<b>Test type:</b> ${TestRunHelper.getTestType(t)}`;
         document.getElementById("start").innerHTML = `<b>Start datetime:</b> ${DateFormatter.format(t.testInfo.start)}`;
         document.getElementById("finish").innerHTML = `<b>Finish datetime:</b> ${DateFormatter.format(t.testInfo.finish)}`;
         document.getElementById("duration").innerHTML = `<b>Duration:</b> ${t.duration.toString()}`;
@@ -1241,53 +1731,94 @@ class TestPageUpdater {
         document.getElementById("message").innerHTML = `<b>Message:</b> ${TestRunHelper.getMessage(t)}`;
     }
     static updateOutput(t) {
-        document.getElementById("test-output-string").innerHTML = `<b>Test log:</b><br>
-		<div style="word-wrap: break-word;  white-space: pre-wrap;">${Differ.safeTagsReplace(TestRunHelper.getOutput(t))}</div>`;
+        Controller.dataService.fromPage(PageType.TestPage).getTestOutput(t, (to) => {
+            let o = Differ.safeTagsReplace(TestRunHelper.getOutput(to));
+            let eo = Differ.safeTagsReplace(TestRunHelper.getExtraOutput(to));
+            document.getElementById("test-output-string").innerHTML = `<b>Test log:</b><br>
+    		<div style="word-wrap: break-word;  white-space: pre-wrap;">${o}</div>`;
+            document.getElementById("test-extra-output-string").innerHTML = `<b>Additional log:</b><br>
+    		<div style="word-wrap: break-word;  white-space: pre-wrap;">${eo}</div>`;
+        });
     }
     static updateTestData(t) {
         let res = "";
         t.testData.forEach((td) => {
-            res += `<li>${DateFormatter.format(td.date)}: ${td.comment} <br>${Differ.getHtml(td.actual, td.expected)}<br></li>`;
+            res += `<li>${DateFormatter.format(td.testDataInfo.date)}: ${td.comment} <br>${Differ.getHtml(td.actual, td.expected)}<br></li>`;
         });
+        if (res === "") {
+            res = "-";
+        }
         document.getElementById("test-data-list").innerHTML = `${res}`;
     }
     static updateScreenshots(t) {
-        let screenshots = "";
-        for (let i = 0; i < t.screenshots.length; i++) {
-            const s = t.screenshots[i];
-            const src = `./${t.testInfo.guid}/img/${s.name}`;
-            screenshots += `<li><b>Screenshot ${DateFormatter.format(s.date)}:</b><a href="${src}"><img src="${src}" alt="${src}" style="width: 100%;"></img></a></li>`;
-        }
-        if (screenshots === "") {
-            screenshots = "-";
-        }
-        document.getElementById("screenshots").innerHTML = screenshots;
+        Controller.dataService.fromPage(PageType.TestPage).getTestScreenshots(t, (screenshotDtos) => {
+            let screenshots = "";
+            for (let i = 0; i < screenshotDtos.length; i++) {
+                const s = screenshotDtos[i];
+                const src = `data:image/${s.format};base64, ${s.base64Data}`;
+                const date = DateFormatter.format(s.testScreenshotInfo.date);
+                const alt = s.testScreenshotInfo.itemName;
+                screenshots += `<li><b>Screenshot ${date}:</b><a href="${src}" target="_blank"><img src="${src}" alt="${alt}" style="width: 100%;"></img></a></li>`;
+            }
+            if (screenshots === "") {
+                screenshots = "-";
+            }
+            document.getElementById("screenshots").innerHTML = screenshots;
+        });
     }
     static updateFailure(t) {
-        document.getElementById("test-message").innerHTML = `<b>Message:</b><br> ${TestRunHelper.getMessage(t)}`;
-        document.getElementById("test-stack-trace").innerHTML = `<b>Stack trace:</b><br> ${TestRunHelper.getStackTrace(t)}`;
+        document.getElementById("test-message").innerHTML = `<b>Message:</b><br>${TestRunHelper.getMessage(t)}`;
+        document.getElementById("test-stack-trace").innerHTML = `<b>Stack trace:</b><br><code style="white-space: pre-wrap">${TestRunHelper.getStackTrace(t)}</code>`;
+    }
+    static getTestHistoryPlotSize(plotDiv) {
+        const p = plotDiv.parentElement.parentElement.parentElement;
+        const w = Math.max(300, Math.min(p.offsetWidth, 1100));
+        const h = Math.max(300, Math.min(p.offsetHeight, 500));
+        return { width: 0.95 * w, height: 0.95 * h };
+    }
+    static setTestRecentFailures(tests) {
+        const recentFailuresDiv = document.getElementById("recent-test-failures");
+        recentFailuresDiv.innerHTML = "";
+        const c = tests.length;
+        for (let i = 0; i < c; i++) {
+            const t = tests[i];
+            const res = TestRunHelper.getResult(t);
+            if (res === TestResult.Failed) {
+                const ti = t.testInfo;
+                const testPeriod = `${DateFormatter.format(t.testInfo.start)} - ${DateFormatter.format(t.testInfo.finish)}`;
+                const href = `index.html?testGuid=${ti.guid}&itemName=${ti.itemName}&currentTab=test-history`;
+                recentFailuresDiv.innerHTML += `<li><div class="width-full text-bold">
+                                <span class="ghpr-test-list-span" style="background-color: ${Color.failed};"></span>
+                                <a class="f5 p-1 mb-2" href="${href}">${testPeriod}</a>
+                              </div></li>`;
+            }
+        }
     }
     static setTestHistory(tests) {
         const historyDiv = document.getElementById("test-history-chart");
         let plotlyData = new Array();
         const dataX = new Array();
         const dataY = new Array();
+        const urls = new Array();
         const tickvals = new Array();
         const ticktext = new Array();
         const colors = new Array();
         const c = tests.length;
         for (let i = 0; i < c; i++) {
             const t = tests[i];
-            dataX[i] = t.testInfo.finish;
+            const ti = t.testInfo;
+            dataX[i] = ti.finish;
             colors[i] = TestRunHelper.getColor(t);
             const j = c - i - 1;
             dataY[i] = t.duration;
             tickvals[i] = j;
             ticktext[i] = `test ${j}`;
+            urls[i] = `index.html?testGuid=${ti.guid}&itemName=${ti.itemName}&currentTab=test-history`;
         }
         const historyTrace = {
             x: dataX,
             y: dataY,
+            customdata: urls,
             name: "Test history",
             hoverinfo: "x",
             type: "scatter",
@@ -1305,6 +1836,7 @@ class TestPageUpdater {
         const currentTest = {
             x: [dataX[index]],
             y: [dataY[index]],
+            customdata: [urls[index]],
             name: "Current test",
             type: "scatter",
             mode: "markers",
@@ -1317,6 +1849,7 @@ class TestPageUpdater {
             }
         };
         plotlyData = [historyTrace, currentTest];
+        var size = this.getTestHistoryPlotSize(historyDiv);
         const layout = {
             title: "Test history",
             xaxis: {
@@ -1324,54 +1857,59 @@ class TestPageUpdater {
             },
             yaxis: {
                 title: "Test duration (sec.)"
-            }
+            },
+            width: size.width,
+            height: size.height
         };
         Plotly.newPlot(historyDiv, plotlyData, layout);
+        historyDiv.on("plotly_click", (eventData) => {
+            var url = `${eventData.points[0].customdata}`;
+            window.open(url, "_self");
+        });
     }
-    static updateTestPage(testGuid, fileName) {
-        let t;
-        this.loader.loadTestJson(testGuid, fileName, (response) => {
-            t = JSON.parse(response, JsonLoader.reviveRun);
+    static updateTestPage(testGuid, itemName) {
+        Controller.dataService.fromPage(PageType.TestPage).getLatestTest(testGuid, itemName, (t) => {
+            Controller.dataService.fromPage(PageType.TestPage).getRun(t.runGuid, (runDto) => {
+                var currentTestInRun = runDto.testsInfo.filter(ti => ti.guid === t.testInfo.guid)[0];
+                var ind = runDto.testsInfo.indexOf(currentTestInRun);
+                var prevTi = runDto.testsInfo[Math.max(ind - 1, 0)];
+                var nextTi = runDto.testsInfo[Math.min(ind + 1, runDto.testsInfo.length - 1)];
+                document.getElementById("btn-prev-from-run")
+                    .setAttribute("href", `index.html?testGuid=${prevTi.guid}&itemName=${prevTi.itemName}&currentTab=test-history`);
+                document.getElementById("btn-next-from-run")
+                    .setAttribute("href", `index.html?testGuid=${nextTi.guid}&itemName=${nextTi.itemName}&currentTab=test-history`);
+            });
             UrlHelper.insertParam("testGuid", t.testInfo.guid);
-            UrlHelper.insertParam("testFile", t.testInfo.fileName);
+            UrlHelper.insertParam("itemName", t.testInfo.itemName);
+            this.updateReportName(Controller.reportSettings.reportName);
             this.updateMainInformation(t);
+            this.updateRecentData(t);
             this.updateOutput(t);
             this.updateFailure(t);
             this.updateScreenshots(t);
             this.updateTestData(t);
             document.getElementById("btn-back").setAttribute("href", `./../runs/index.html?runGuid=${t.runGuid}`);
             this.updateTestHistory();
-            this.updateCopyright();
+            this.updateCopyright(Controller.reportSettings.coreVersion);
+            window.addEventListener("resize", () => {
+                const historyDiv = document.getElementById("test-history-chart");
+                var size = this.getTestHistoryPlotSize(historyDiv);
+                Plotly.relayout(historyDiv, { width: size.width, height: size.height });
+            });
         });
-        return t;
     }
     static updateTestHistory() {
-        const paths = new Array();
-        const testStrings = new Array();
-        const tests = new Array();
         const guid = UrlHelper.getParam("testGuid");
-        let testInfos;
-        this.loader.loadTestsJson(guid, (response) => {
-            testInfos = JSON.parse(response, JsonLoader.reviveRun);
-            testInfos.sort(Sorter.itemInfoSorterByFinishDateFuncDesc);
-            for (let i = 0; i < this.testVersionsCount; i++) {
-                paths[i] = `./${testInfos[i].guid}/${testInfos[i].fileName}`;
-            }
-            this.loader.loadAllJsons(paths, 0, testStrings, (responses) => {
-                for (let i = 0; i < responses.length; i++) {
-                    tests[i] = JSON.parse(responses[i], JsonLoader.reviveRun);
-                }
-                this.setTestHistory(tests);
-            });
+        Controller.dataService.fromPage(PageType.TestPage).getLatestTests(guid, (testRunDtos, total) => {
+            this.setTestHistory(testRunDtos);
+            this.setTestRecentFailures(testRunDtos);
         });
     }
     static loadTest(index) {
         const guid = UrlHelper.getParam("testGuid");
-        let testInfos;
-        this.loader.loadTestsJson(guid, (response) => {
-            testInfos = JSON.parse(response, JsonLoader.reviveRun);
-            testInfos.sort(Sorter.itemInfoSorterByFinishDateFuncDesc);
-            this.testVersionsCount = this.reportSettings.testsToDisplay >= 1 ? Math.min(testInfos.length, this.reportSettings.testsToDisplay) : testInfos.length;
+        Controller.dataService.fromPage(PageType.TestPage).getTestInfos(guid, (testInfoDtos) => {
+            let testsToDisplay = Controller.reportSettings.testsToDisplay;
+            this.testVersionsCount = testsToDisplay >= 1 ? Math.min(testInfoDtos.length, testsToDisplay) : testInfoDtos.length;
             if (index === undefined || index.toString() === "NaN") {
                 index = 0;
             }
@@ -1387,21 +1925,19 @@ class TestPageUpdater {
                 this.disableBtn("btn-prev");
             }
             this.currentTest = index;
-            this.updateTestPage(testInfos[index].guid, testInfos[index].fileName);
+            this.updateTestPage(testInfoDtos[index].guid, testInfoDtos[index].itemName);
         });
     }
     static tryLoadTestByGuid() {
         const guid = UrlHelper.getParam("testGuid");
-        const fileName = UrlHelper.getParam("testFile");
-        let testInfos;
-        this.loader.loadTestsJson(guid, (response) => {
-            testInfos = JSON.parse(response, JsonLoader.reviveRun);
-            testInfos.sort(Sorter.itemInfoSorterByFinishDateFuncDesc);
-            this.testVersionsCount = this.reportSettings.testsToDisplay >= 1 ? Math.min(testInfos.length, this.reportSettings.testsToDisplay) : testInfos.length;
-            const testInfo = testInfos.find((t) => t.fileName === fileName);
+        const itemName = UrlHelper.getParam("itemName");
+        Controller.dataService.fromPage(PageType.TestPage).getTestInfos(guid, (testInfoDtos) => {
+            let testsToDisplay = Controller.reportSettings.testsToDisplay;
+            this.testVersionsCount = testsToDisplay >= 1 ? Math.min(testInfoDtos.length, testsToDisplay) : testInfoDtos.length;
+            const testInfo = testInfoDtos.find((t) => t.itemName === itemName);
             if (testInfo != undefined) {
                 this.enableBtns();
-                let index = testInfos.indexOf(testInfo);
+                let index = testInfoDtos.indexOf(testInfo);
                 if (index <= 0) {
                     index = 0;
                     this.disableBtn("btn-next");
@@ -1463,8 +1999,7 @@ class TestPageUpdater {
         this.loadTest(undefined);
     }
     static initializePage() {
-        this.loader.loadReportSettingsJson((response) => {
-            this.reportSettings = JSON.parse(response);
+        Controller.init(PageType.TestPage, (dataService, reportSettings) => {
             const isLatest = UrlHelper.getParam("loadLatest");
             if (isLatest !== "true") {
                 UrlHelper.removeParam("loadLatest");
@@ -1483,10 +2018,10 @@ class TestPageUpdater {
         TabsHelper.showTab(idToShow, caller, this.runPageTabsIds);
     }
 }
-TestPageUpdater.loader = new JsonLoader(PageType.TestPage);
-TestPageUpdater.runPageTabsIds = ["test-history", "test-output", "test-failure", "test-screenshots", "test-data"];
+TestPageUpdater.reviveRun = JsonParser.reviveRun;
+TestPageUpdater.runPageTabsIds = ["test-history", "test-output", "test-extra-output", "test-failure", "test-screenshots", "test-data"];
 class Sorter {
-    static itemInfoSorterByFinishDateFunc(a, b) {
+    static itemInfoByFinishDate(a, b) {
         if (a.finish > b.finish) {
             return 1;
         }
@@ -1495,7 +2030,7 @@ class Sorter {
         }
         return 0;
     }
-    static itemInfoSorterByFinishDateFuncDesc(a, b) {
+    static itemInfoByFinishDateDesc(a, b) {
         if (a.finish < b.finish) {
             return 1;
         }
@@ -1504,7 +2039,5 @@ class Sorter {
         }
         return 0;
     }
-}
-function loadRun1(guid) {
 }
 //# sourceMappingURL=ghpr.controller.js.map

@@ -1,0 +1,1 @@
+{"testOutputInfo":{"itemName":"test_output_20190111_145547340.json","date":"2019-01-11T14:55:47.3404056+03:00"},"output":"Testing log writing 1\r\nTesting log writing 2\r\nGhpr.NUnitTests.TestClass1.TestMethod3k: Category, v: Cat1\r\nk: aaa, v: 42\r\nGETTING SCREEN...\r\nGETTING SCREEN DONE!\r\n","suiteOutput":""}
