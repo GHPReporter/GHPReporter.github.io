@@ -11,9 +11,6 @@
   <a href="https://github.com/GHPReporter/GHPReporter.github.io/">Site Repo</a>
 </p>
 
+# GHPReporter [Website](https://GHPReporter.github.io)
 
-[![Language](http://gh-toprated.info/Badges/LanguageBadge?user=ghpreporter&repo=GHPReporter.github.io&badgeSize=medium&theme=light&fontWeight=bold)](https://GHPReporter.github.io)
-
-# GHPReporter Website
-
-This is the official site of GHPReporter. [Visit site](https://GHPReporter.github.io)
+This is the official site of GHPReporter. [Visit the site](https://GHPReporter.github.io)
